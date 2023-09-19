@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Model;
 
+use App\Model\Exception\HTTPException;
+
 class Router
 {
 
@@ -77,5 +79,7 @@ class Router
                 return;
             }
         }
+
+        throw new HTTPException(404);
     }
 }
