@@ -43,12 +43,12 @@ class Router
         return $parameters; // associative array
     }
 
-    private function matchSimpleRoute(array $route): bool
+    private function matchRouteWithoutParameter(array $route): bool
     {
         return $route['uri'] === $this->uri;
     }
 
-    private function matchComplexRoute(array $route): bool
+    private function matchRouteWithParameter(array $route): bool
     {
         $uri = $this->transformUriToArray($this->uri);
         $route = $this->transformUriToArray($route['uri']);
@@ -68,10 +68,10 @@ class Router
     public function run(): void
     {
         foreach ($this->routes as $route) {
-            if ($this->matchSimpleRoute($route)) {
+            if ($this->matchRouteWithoutParameter($route)) {
                 $this->callController($route['controller']);
                 return;
-            } elseif ($this->matchComplexRoute($route)) {
+            } elseif ($this->matchRouteWithParameter($route)) {
                 $parameters = $this->extractParameters($route);
                 $this->callController($route['controller'], $parameters);
                 return;
