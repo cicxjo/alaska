@@ -13,7 +13,7 @@ class Article
     private string $modified_at;
     private string $title;
     private string $content;
-    private array $comments = [];
+    private ?array $comments = null;
 
     public function getId(): int
     {
