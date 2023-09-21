@@ -11,5 +11,7 @@ class PrintAndDie
         foreach ($vars as $var) {
             echo( '<pre>' . print_r($var, true) . '</pre>');
         }
+
+        exit();
     }
 }
