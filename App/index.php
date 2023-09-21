@@ -13,5 +13,5 @@ $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
 try {
     $router->run();
 } catch (App\Model\Exception\HTTPException $e) {
-    http_response_code($e->getCode());
+    App\Controller\HTTPError::send($e->getCode());
 }
