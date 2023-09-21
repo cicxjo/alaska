@@ -7,7 +7,8 @@ App\Autoloader::register();
 
 $router = new App\Model\Router();
 $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
-       ->addRoute('/article/:id', ['App\Controller\Article', 'showArticle']);
+       ->addRoute('/article/:id', ['App\Controller\Article', 'showArticle'])
+       ->addRoute('/admin', ['App\Controller\Administration', 'showPanel']);
 
 try {
     $router->run();

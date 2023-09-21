@@ -85,7 +85,7 @@ class Article
         return $this;
     }
 
-    public function getComments(): array
+    public function getComments(): ?array
     {
         return $this->comments;
     }
