@@ -11,6 +11,8 @@ class Config
     private string $databaseUsername;
     private string $databasePassword;
     private bool $databaseDebug;
+    private string $url;
+    private string $domain;
 
     private function __construct()
     {
@@ -21,6 +23,9 @@ class Config
         $this->databaseUsername = $config['database']['username'];
         $this->databasePassword = $config['database']['password'];
         $this->databaseDebug = $config['database']['debug'];
+        $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https')
+            . "://" . $_SERVER['HTTP_HOST'];
+        $this->domain = $_SERVER['HTTP_HOST'];
     }
 
     private static function getInstance(): self
@@ -50,5 +55,15 @@ class Config
     public static function getDatabaseDebug(): bool
     {
         return self::getInstance()->databaseDebug;
+    }
+
+    public static function getUrl(): string
+    {
+        return self::getInstance()->url;
+    }
+
+    public static function getDomain(): string
+    {
+        return self::getInstance()->domain;
     }
 }
