@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Model\Config;
+use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
@@ -65,6 +66,30 @@ class Administration
             'url' => Config::getUrl(),
             'domain' => Config::getDomain(),
             'articles' => $this->articleManager->getAll(),
+            ]);
+        }
+    }
+
+    public function addArticle(): void
+    {
+        if ($this->authenticate()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_POST['article_title'] && $_POST['article_content']) {
+                    $article = new ArticleEntity();
+                    $article->setTitle($_POST['article_title'])
+                            ->setContent($_POST['article_content']);
+                    $this->articleManager->create($article);
+                    header('Location: ' . Config::getUrl() . '/admin');
+                    return;
+                }
+            }
+
+            $render = new Render('Page', 'ArticleEditor');
+            $render->process([
+                'title' => 'Panneau d’administration',
+                'url' => Config::getUrl(),
+                'domain' => Config::getDomain(),
+                'tinymce' => true,
             ]);
         }
     }
