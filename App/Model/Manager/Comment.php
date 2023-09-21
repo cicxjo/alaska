@@ -36,7 +36,7 @@ class Comment
         : '';
 
         try {
-            $articles = $this->pdoHandler->execute($sql)
+            $comments = $this->pdoHandler->execute($sql)
                 ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
@@ -44,7 +44,7 @@ class Comment
             }
         }
 
-        return !empty($articles) ? $articles : null;
+        return !empty($comments) ? $comments : null;
     }
 
     public function getById(int $id): ?CommentEntity
@@ -55,7 +55,7 @@ class Comment
         HEREDOC;
 
         try {
-            $article = $this->pdoHandler->execute($sql)
+            $comment = $this->pdoHandler->execute($sql)
                 ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
@@ -63,7 +63,7 @@ class Comment
             }
         }
 
-        return !empty($article) ? $article[0] : null;
+        return !empty($comment) ? $comment[0] : null;
     }
 
     public function create(CommentEntity $entity): void
