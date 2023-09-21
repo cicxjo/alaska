@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Model\Entity;
 
+use DateTime;
+
 class Comment
 {
     public const TABLE = 'comment';
@@ -40,8 +42,12 @@ class Comment
         return $this;
     }
 
-    public function getInsertedAt(): string
+    public function getInsertedAt(bool $dateTime = false): string|DateTime
     {
+        if ($dateTime) {
+            return new DateTime($this->inserted_at);
+        }
+
         return $this->inserted_at;
     }
 
