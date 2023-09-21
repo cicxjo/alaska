@@ -6,6 +6,7 @@ require_once(__DIR__ . '/Autoloader.php');
 App\Autoloader::register();
 
 $router = new App\Model\Router();
+$router->addRoute('/', ['App\Controller\Article', 'listArticles']);
 
 try {
     $router->run();

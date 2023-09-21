@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Model\Entity;
 
+use DateTime;
+
 class Article
 {
     public const TABLE = 'article';
@@ -27,8 +29,12 @@ class Article
         return $this;
     }
 
-    public function getInsertedAt(): string
+    public function getInsertedAt(bool $dateTime = false): string|DateTime
     {
+        if ($dateTime) {
+            return new DateTime($this->inserted_at);
+        }
+
         return $this->inserted_at;
     }
 
@@ -39,8 +45,12 @@ class Article
         return $this;
     }
 
-    public function getModifiedAt(): string
+    public function getModifiedAt(bool $dateTime = false): string|DateTime
     {
+        if ($dateTime) {
+            return new DateTime($this->modified_at);
+        }
+
         return $this->modified_at;
     }
 
