@@ -13,8 +13,14 @@ use PDOException;
 
 class Comment
 {
+    private PDOHandler $pdoHandler;
     private string $commentEntity = CommentEntity::class;
     private string $commentTable = CommentEntity::class::TABLE;
+
+    public function __construct()
+    {
+        $this->pdoHandler = PDOHandler::getInstance();
+    }
 
     public function getAll(?bool $flagged = null): ?array
     {
@@ -30,7 +36,7 @@ class Comment
         : '';
 
         try {
-            $articles = PDOHandler::run($sql)
+            $articles = $this->pdoHandler->execute($sql)
                 ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
@@ -49,7 +55,7 @@ class Comment
         HEREDOC;
 
         try {
-            $article = PDOHandler::run($sql)
+            $article = $this->pdoHandler->execute($sql)
                 ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
@@ -77,7 +83,7 @@ class Comment
 
 
         try {
-            PDOHandler::run($sql, $values);
+            $this->pdoHandler->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -96,7 +102,7 @@ class Comment
         $values = ['is_flagged' => $flagged ? 1 : 0];
 
         try {
-            PDOHandler::run($sql, $values);
+            $this->pdoHandler->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -112,7 +118,7 @@ class Comment
         HEREDOC;
 
         try {
-            PDOHandler::run($sql);
+            $this->pdoHandler->execute($sql);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());

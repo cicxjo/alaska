@@ -35,7 +35,7 @@ class PDOHandler
         }
     }
 
-    private static function getInstance(): self
+    public static function getInstance(): self
     {
         if (!self::$instance instanceof self) {
             self::$instance = new self();
@@ -44,7 +44,7 @@ class PDOHandler
         return self::$instance;
     }
 
-    public static function run(string $sql, ?array $args = null) : PDOStatement
+    public function execute(string $sql, ?array $args = null) : PDOStatement
     {
         $instance = self::getInstance();
 

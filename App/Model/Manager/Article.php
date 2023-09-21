@@ -15,6 +15,7 @@ use ReflectionClass;
 
 class Article
 {
+    private PDOHandler $pdoHandler;
     private string $articleEntity = ArticleEntity::class;
     private string $commentEntity = CommentEntity::class;
     private string $articleTable = ArticleEntity::class::TABLE;
@@ -26,6 +27,7 @@ class Article
 
     public function __construct()
     {
+        $this->pdoHandler = PDOHandler::getInstance();
         $this->articleReflection = new ReflectionClass($this->articleEntity);
         $this->commentReflection = new ReflectionClass($this->commentEntity);
     }
@@ -74,7 +76,7 @@ class Article
         $articles = [];
         $comments = [];
 
-        $query = PDOHandler::run($sql);
+        $query = $this->pdoHandler->execute($sql);
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $article = new ArticleEntity();
@@ -155,7 +157,7 @@ class Article
         ];
 
         try {
-            PDOHandler::run($sql, $values);
+            $this->pdoHandler->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -171,7 +173,7 @@ class Article
         HEREDOC;
 
         try {
-            PDOHandler::run($sql);
+            $this->pdoHandler->execute($sql);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -193,7 +195,7 @@ class Article
         ];
 
         try {
-            PDOHandler::run($sql, $values);
+            $this->pdoHandler->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
