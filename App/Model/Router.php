@@ -8,13 +8,26 @@ use App\Model\Exception\HTTPException;
 
 class Router
 {
-
     private array $routes = [];
     private string $uri;
+    private mixed $parameter;
 
     public function __construct()
     {
+        $parameter = $this->splitUriIntoArray($_SERVER['REQUEST_URI']) ?? null;
         $this->uri = $_SERVER['REQUEST_URI'];
+        $this->parameter = $parameter[array_key_last($parameter)] ?? null;
+    }
+
+    private function callController(
+        array $controller,
+        mixed $parameter = null
+    ): void {
+        $class = $controller[0];
+        $method = $controller[1];
+
+        $class = new $class();
+        $class->$method($parameter);
     }
 
     public function addRoute(string $uri, array $controller): self
@@ -24,59 +37,43 @@ class Router
         return $this;
     }
 
-    private function transformUriToArray(string $uri): array
+    private function splitUriIntoArray(string $uri): ?array
     {
         return array_values(array_filter(explode('/', $uri)));
-    }
-
-    private function extractParameters(array $route): array
-    {
-        $uri = $this->transformUriToArray($this->uri);
-        $route = $this->transformUriToArray($route['uri']);
-
-        array_shift($uri);
-        array_shift($route);
-
-        foreach ($route as $key => $value) {
-            $value = str_replace(':', '', $value);
-            $parameters[$value] = $uri[$key];
-        }
-
-        return $parameters; // associative array
-    }
-
-    private function matchRouteWithoutParameter(array $route): bool
-    {
-        return $route['uri'] === $this->uri;
-    }
-
-    private function matchRouteWithParameter(array $route): bool
-    {
-        $uri = $this->transformUriToArray($this->uri);
-        $route = $this->transformUriToArray($route['uri']);
-
-        return count($uri) === count($route) && $uri[0] === $route[0];
-    }
-
-    private function callController(array $controller, array $args = []): void
-    {
-        $class = $controller[0];
-        $method = $controller[1];
-
-        $class = new $class();
-        $class->$method($args);
     }
 
     public function run(): void
     {
         foreach ($this->routes as $route) {
-            if ($this->matchRouteWithoutParameter($route)) {
+            $routeUriArray = $this->splitUriIntoArray($route['uri']);
+            $uriArray = $this->splitUriIntoArray($this->uri);
+
+            if ($this->uri === $route['uri'] || $uriArray === $routeUriArray) {
                 $this->callController($route['controller']);
                 return;
-            } elseif ($this->matchRouteWithParameter($route)) {
-                $parameters = $this->extractParameters($route);
-                $this->callController($route['controller'], $parameters);
-                return;
+            } else {
+                if (empty($uriArray)) {
+                    break;
+                }
+
+                $routeParameter = $routeUriArray[array_key_last($routeUriArray)]
+                    ?? null;
+
+                if (is_string($routeParameter)
+                    && mb_substr($routeParameter, 0, 1) === ':') {
+                    unset(
+                        $uriArray[array_key_last($uriArray)],
+                        $routeUriArray[array_key_last($routeUriArray)]
+                    );
+
+                    if ($uriArray === $routeUriArray) {
+                        $this->callController(
+                            $route['controller'],
+                            $this->parameter
+                        );
+                        return;
+                    }
+                }
             }
         }
 

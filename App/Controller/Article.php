@@ -29,17 +29,14 @@ class Article
         ]);
     }
 
-    public function showArticle(array $params): void
+    public function showArticle(string $id): void
     {
-        $id = $params['id'];
-
         if (!ctype_digit($id)) {
             throw new HTTPException(404);
             return;
         }
 
         $id = (int) $id;
-        $article = $this->articleManager->getById($id);
         $render = new Render('Page', 'ShowArticle');
         $render->process([
             'article' => $this->articleManager->getById($id),

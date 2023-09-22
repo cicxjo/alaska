@@ -109,11 +109,9 @@ class Administration
         }
     }
 
-    public function updateArticle(array $params): void
+    public function updateArticle(string $id): void
     {
         if ($this->authenticate()) {
-            $id = $params['id'];
-
             if (!ctype_digit($id)) {
                 throw new HTTPException(404);
                 return;
@@ -158,11 +156,9 @@ class Administration
         }
     }
 
-    public function deleteArticle(array $params): void
+    public function deleteArticle(string $id): void
     {
         if ($this->authenticate()) {
-            $id = $params['id'];
-
             if (!ctype_digit($id)) {
                 throw new HTTPException(404);
                 return;
