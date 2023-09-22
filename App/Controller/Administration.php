@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Model\Config;
 use App\Model\Entity\Article as ArticleEntity;
+use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
@@ -105,6 +106,22 @@ class Administration
 
             $render = new Render('Page', 'ArticleEditor');
             $render->process($data);
+        }
+    }
+
+    public function deleteArticle(array $params): void
+    {
+        if ($this->authenticate()) {
+            $id = $params['id'];
+
+            if (!ctype_digit($id)) {
+                throw new HTTPException(404);
+                return;
+            }
+
+            $id = (int) $id;
+            $this->articleManager->delete($id);
+            header('Location: ' . Config::getUrl() . '/admin');
         }
     }
 }
