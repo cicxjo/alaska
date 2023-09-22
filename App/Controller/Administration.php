@@ -109,6 +109,55 @@ class Administration
         }
     }
 
+    public function updateArticle(array $params): void
+    {
+        if ($this->authenticate()) {
+            $id = $params['id'];
+
+            if (!ctype_digit($id)) {
+                throw new HTTPException(404);
+                return;
+            }
+
+            $id = (int) $id;
+            $article = $this->articleManager->getById($id);
+            $data = [
+                'title' => 'Panneau d’administration',
+                'url' => Config::getUrl(),
+                'domain' => Config::getDomain(),
+                'tinymce' => true,
+                'article' => $article,
+            ];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_POST['article_title'] && $_POST['article_content']) {
+                    $article = new ArticleEntity();
+                    $article->setTitle($_POST['article_title'])
+                            ->setContent($_POST['article_content'])
+                            ->setId($id);
+                    $this->articleManager->update($article);
+                    header('Location: ' . Config::getUrl() . '/admin');
+                    return;
+                }
+
+                if (empty($_POST['article_title'])) {
+                    $data['form']['article_title'] = false;
+                } else {
+                    $data['form']['article_title'] = $_POST['article_title'];
+                }
+
+                if (empty($_POST['article_content'])) {
+                    $data['form']['article_content'] = false;
+                } else {
+                    $data['form']['article_content'] =$_POST['article_content'];
+                }
+            }
+
+            $render = new Render('Page', 'ArticleEditor');
+            $render->process($data);
+        }
+    }
+
     public function deleteArticle(array $params): void
     {
         if ($this->authenticate()) {
