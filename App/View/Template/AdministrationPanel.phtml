@@ -23,6 +23,10 @@ foreach ($articles as $article) {
         </header>
 
         <div class="mt-5">
+            <a class="btn btn-primary" href="<?= $url ?>/admin/ajouter/article">Ajouter un article</a>
+        </div>
+
+        <div class="mt-5">
             <h2 class="mb-4">Commentaires signalés</h2>
 
             <?php if (count($flaggedComments) === 1) : ?>

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Model\Config;
+use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
@@ -66,6 +67,44 @@ class Administration
             'domain' => Config::getDomain(),
             'articles' => $this->articleManager->getAll(),
             ]);
+        }
+    }
+
+    public function addArticle(): void
+    {
+        if ($this->authenticate()) {
+            $data = [
+                'title' => 'Panneau d’administration',
+                'url' => Config::getUrl(),
+                'domain' => Config::getDomain(),
+                'tinymce' => true,
+            ];
+
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_POST['article_title'] && $_POST['article_content']) {
+                    $article = new ArticleEntity();
+                    $article->setTitle($_POST['article_title'])
+                            ->setContent($_POST['article_content']);
+                    $this->articleManager->create($article);
+                    header('Location: ' . Config::getUrl() . '/admin');
+                    return;
+                }
+
+                if (empty($_POST['article_title'])) {
+                    $data['form']['article_title'] = false;
+                } else {
+                    $data['form']['article_title'] = $_POST['article_title'];
+                }
+
+                if (empty($_POST['article_content'])) {
+                    $data['form']['article_content'] = false;
+                } else {
+                    $data['form']['article_content'] =$_POST['article_content'];
+                }
+            }
+
+            $render = new Render('Page', 'ArticleEditor');
+            $render->process($data);
         }
     }
 }
