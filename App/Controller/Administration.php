@@ -73,6 +73,13 @@ class Administration
     public function addArticle(): void
     {
         if ($this->authenticate()) {
+            $data = [
+                'title' => 'Panneau d’administration',
+                'url' => Config::getUrl(),
+                'domain' => Config::getDomain(),
+                'tinymce' => true,
+            ];
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($_POST['article_title'] && $_POST['article_content']) {
                     $article = new ArticleEntity();
@@ -82,15 +89,22 @@ class Administration
                     header('Location: ' . Config::getUrl() . '/admin');
                     return;
                 }
+
+                if (empty($_POST['article_title'])) {
+                    $data['form']['article_title'] = false;
+                } else {
+                    $data['form']['article_title'] = $_POST['article_title'];
+                }
+
+                if (empty($_POST['article_content'])) {
+                    $data['form']['article_content'] = false;
+                } else {
+                    $data['form']['article_content'] =$_POST['article_content'];
+                }
             }
 
             $render = new Render('Page', 'ArticleEditor');
-            $render->process([
-                'title' => 'Panneau d’administration',
-                'url' => Config::getUrl(),
-                'domain' => Config::getDomain(),
-                'tinymce' => true,
-            ]);
+            $render->process($data);
         }
     }
 }
