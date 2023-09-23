@@ -9,71 +9,46 @@ use App\Model\Exception\HTTPException;
 class Router
 {
     private array $routes = [];
-    private string $uri;
-    private mixed $parameter;
+    private string $action;
+    private ?string $id;
 
     public function __construct()
     {
-        $parameter = $this->splitUriIntoArray($_SERVER['REQUEST_URI']) ?? null;
-        $this->uri = $_SERVER['REQUEST_URI'];
-        $this->parameter = $parameter[array_key_last($parameter)] ?? null;
+        $this->action = isset($_GET['action']) ? $_GET['action'] : '';
+        $this->id = isset($_GET['id']) ? $_GET['id'] : null;
     }
 
-    private function callController(
-        array $controller,
-        mixed $parameter = null
-    ): void {
-        $class = $controller[0];
-        $method = $controller[1];
-
-        $class = new $class();
-        $class->$method($parameter);
-    }
-
-    public function addRoute(string $uri, array $controller): self
-    {
-        $this->routes[] = ['uri' => $uri, 'controller' => $controller];
+    public function addRoute(
+        string $action,
+        ?string $parameter,
+        array $controller
+    ): self {
+        $this->routes[] = [
+            'action' => $action,
+            'parameter' => $parameter,
+            'controller' => $controller,
+        ];
 
         return $this;
     }
 
-    private function splitUriIntoArray(string $uri): ?array
+    public function executeAction(array $route): void
     {
-        return array_values(array_filter(explode('/', $uri)));
+        $controller = $route['controller'];
+        $class = $controller[0];
+        $method = $controller[1];
+        $parameter = $route['parameter'];
+
+        $class = new $class();
+        $class->$method($this->$parameter ?? null);
     }
 
     public function run(): void
     {
         foreach ($this->routes as $route) {
-            $routeUriArray = $this->splitUriIntoArray($route['uri']);
-            $uriArray = $this->splitUriIntoArray($this->uri);
-
-            if ($this->uri === $route['uri'] || $uriArray === $routeUriArray) {
-                $this->callController($route['controller']);
+            if ($this->action === preg_replace('@^/@', '', $route['action'])) {
+                $this->executeAction($route);
                 return;
-            } else {
-                if (empty($uriArray)) {
-                    break;
-                }
-
-                $routeParameter = $routeUriArray[array_key_last($routeUriArray)]
-                    ?? null;
-
-                if (is_string($routeParameter)
-                    && mb_substr($routeParameter, 0, 1) === ':') {
-                    unset(
-                        $uriArray[array_key_last($uriArray)],
-                        $routeUriArray[array_key_last($routeUriArray)]
-                    );
-
-                    if ($uriArray === $routeUriArray) {
-                        $this->callController(
-                            $route['controller'],
-                            $this->parameter
-                        );
-                        return;
-                    }
-                }
             }
         }
 
