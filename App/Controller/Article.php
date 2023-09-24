@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Config;
 use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Render;
 
-class Article
+class Article extends AbstractController
 {
     private ArticleManager $articleManager;
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->articleManager = new ArticleManager();
     }
 
@@ -23,8 +24,8 @@ class Article
         $render = new Render('Page', 'ListArticles');
         $render->process([
             'title' => 'Billet simple pour l’Alaska',
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
+            'url' => $this->config->getUrl(),
+            'domain' => $this->config->getDomain(),
             'articles' => $this->articleManager->getAll(),
         ]);
     }
@@ -40,8 +41,8 @@ class Article
         $render = new Render('Page', 'ShowArticle');
         $render->process([
             'article' => $this->articleManager->getById($id),
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
+            'url' => $this->config->getUrl(),
+            'domain' => $this->config->getDomain(),
         ]);
     }
 }

@@ -29,7 +29,7 @@ class Config
         $this->websiteRewrite = $config['website']['rewrite'];
     }
 
-    private static function getInstance(): self
+    public static function getInstance(): self
     {
         if (!self::$instance instanceof self) {
             self::$instance = new self();
@@ -38,38 +38,38 @@ class Config
         return self::$instance;
     }
 
-    public static function getDatabaseName(): string
+    public function getDatabaseName(): string
     {
-        return self::getInstance()->databaseName;
+        return $this->databaseName;
     }
 
-    public static function getDatabaseUsername(): string
+    public function getDatabaseUsername(): string
     {
-        return self::getInstance()->databaseUsername;
+        return $this->databaseUsername;
     }
 
-    public static function getDatabasePassword(): string
+    public function getDatabasePassword(): string
     {
-        return self::getInstance()->databasePassword;
+        return $this->databasePassword;
     }
 
-    public static function getDatabaseDebug(): bool
+    public function getDatabaseDebug(): bool
     {
-        return self::getInstance()->databaseDebug;
+        return $this->databaseDebug;
     }
 
-    public static function getUrl(): string
+    public function getUrl(): string
     {
-        return self::getInstance()->url;
+        return $this->url;
     }
 
-    public static function getDomain(): string
+    public function getDomain(): string
     {
-        return self::getInstance()->domain;
+        return $this->domain;
     }
 
-    public static function getWebsiteRewrite(): bool
+    public function getWebsiteRewrite(): bool
     {
-        return self::getInstance()->websiteRewrite;
+        return $this->websiteRewrite;
     }
 }

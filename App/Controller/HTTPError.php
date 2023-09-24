@@ -4,23 +4,30 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Config;
 use App\Model\Render;
 
-class HTTPError
+class HTTPError extends AbstractController
 {
-    private static array $httpStatus = [404 => 'Ressource introuvable'];
+    private int $code;
+    private array $httpStatus = [404 => 'Ressource introuvable'];
 
-    public static function send(int $code)
+    public function __construct(int $code)
+    {
+        parent::__construct();
+
+        $this->code = $code;
+    }
+
+    public function send(): void
     {
         $render = new Render('Page', 'HTTPError');
 
-        http_response_code($code);
+        http_response_code($this->code);
         $render->process([
-            'title' => $code . ' - ' . self::$httpStatus[$code],
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
-            'message' => $code . ' - ' . self::$httpStatus[$code],
+            'title' => $this->code . ' - ' . $this->httpStatus[$this->code],
+            'url' => $this->config->getUrl(),
+            'domain' => $this->config->getDomain(),
+            'message' => $this->code . ' - ' . $this->httpStatus[$this->code],
         ]);
     }
 }

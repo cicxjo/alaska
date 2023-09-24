@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Config;
 use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
@@ -12,13 +11,15 @@ use App\Model\Manager\User as UserManager;
 use App\Model\Render;
 use App\Model\Url;
 
-class Administration
+class Administration extends AbstractController
 {
     private ArticleManager $articleManager;
     private UserManager $userManager;
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->articleManager = new ArticleManager();
         $this->userManager = new UserManager();
     }
@@ -63,8 +64,8 @@ class Administration
             $render = new Render('Page', 'AdministrationPanel');
             $render->process([
             'title' => 'Panneau d’administration',
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
+            'url' => $this->config->getUrl(),
+            'domain' => $this->config->getDomain(),
             'articles' => $this->articleManager->getAll(),
             ]);
         }
@@ -75,8 +76,8 @@ class Administration
         if ($this->authenticate()) {
             $data = [
                 'title' => 'Panneau d’administration',
-                'url' => Config::getUrl(),
-                'domain' => Config::getDomain(),
+                'url' => $this->config->getUrl(),
+                'domain' => $this->config->getDomain(),
                 'tinymce' => true,
             ];
 
@@ -116,8 +117,8 @@ class Administration
             $article = $this->articleManager->getById($id);
             $data = [
                 'title' => 'Panneau d’administration',
-                'url' => Config::getUrl(),
-                'domain' => Config::getDomain(),
+                'url' => $this->config->getUrl(),
+                'domain' => $this->config->getDomain(),
                 'tinymce' => true,
                 'article' => $article,
             ];

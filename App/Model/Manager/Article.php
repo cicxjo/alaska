@@ -4,18 +4,15 @@ declare(strict_types = 1);
 
 namespace App\Model\Manager;
 
-use App\Model\Config;
 use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Entity\Comment as CommentEntity;
-use App\Model\PDOHandler;
 use App\Model\PrintAndDie;
 use PDO;
 use PDOException;
 use ReflectionClass;
 
-class Article
+class Article extends AbstractManager
 {
-    private PDOHandler $pdoHandler;
     private string $articleEntity = ArticleEntity::class;
     private string $commentEntity = CommentEntity::class;
     private string $articleTable = ArticleEntity::class::TABLE;
@@ -27,7 +24,8 @@ class Article
 
     public function __construct()
     {
-        $this->pdoHandler = PDOHandler::getInstance();
+        parent::__construct();
+
         $this->articleReflection = new ReflectionClass($this->articleEntity);
         $this->commentReflection = new ReflectionClass($this->commentEntity);
     }
@@ -118,7 +116,7 @@ class Article
         try {
             $articles = $this->getWithComments($sql);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
@@ -134,7 +132,7 @@ class Article
         try {
             $article = $this->getWithComments($sql);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
@@ -159,7 +157,7 @@ class Article
             $this->pdoHandler
                  ->execute($sql, $values);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
@@ -176,7 +174,7 @@ class Article
             $this->pdoHandler
                  ->execute($sql);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
@@ -199,7 +197,7 @@ class Article
             $this->pdoHandler
                  ->execute($sql, $values);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
