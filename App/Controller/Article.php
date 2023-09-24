@@ -32,24 +32,20 @@ class Article extends AbstractController
 
     public function showArticle(string $id): void
     {
-        if (!ctype_digit($id)) {
-            throw new HTTPException(404);
-            return;
-        }
+        if ($this->isValidId($id)) {
+            $article = $this->articleManager->getById((int) $id);
 
-        $id = (int) $id;
-        $article = $this->articleManager->getById($id);
-
-        if ($article) {
-            $render = new Render('Page', 'ShowArticle');
-            $render->process([
-                'article' => $article,
-                'url' => $this->config->getWebsiteUrl(),
-                'domain' => $this->config->getWebsiteDomain(),
-            ]);
-        } else {
-            throw new HTTPException(404);
-            return;
+            if ($article) {
+                $render = new Render('Page', 'ShowArticle');
+                $render->process([
+                    'article' => $article,
+                    'url' => $this->config->getWebsiteUrl(),
+                    'domain' => $this->config->getWebsiteDomain(),
+                ]);
+            } else {
+                throw new HTTPException(404);
+                return;
+            }
         }
     }
 }

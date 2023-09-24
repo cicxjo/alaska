@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller;
 
 use App\Model\Config;
+use App\Model\Exception\HTTPException;
 use App\Model\Url;
 
 abstract class AbstractController
@@ -16,5 +17,15 @@ abstract class AbstractController
     {
         $this->config = Config::getInstance();
         $this->url = Url::getInstance();
+    }
+
+    protected function isValidId(string $id): bool
+    {
+        if (ctype_digit($id)) {
+            return true;
+        } else {
+            throw new HTTPException(404);
+            return false;
+        }
     }
 }

@@ -107,12 +107,7 @@ class Administration extends AbstractController
 
     public function updateArticle(string $id): void
     {
-        if ($this->authenticate()) {
-            if (!ctype_digit($id)) {
-                throw new HTTPException(404);
-                return;
-            }
-
+        if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
             $article = $this->articleManager->getById($id);
 
@@ -156,12 +151,7 @@ class Administration extends AbstractController
 
     public function deleteArticle(string $id): void
     {
-        if ($this->authenticate()) {
-            if (!ctype_digit($id)) {
-                throw new HTTPException(404);
-                return;
-            }
-
+        if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
             $article = $this->articleManager->getById($id);
 
