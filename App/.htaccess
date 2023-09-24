@@ -3,8 +3,7 @@
 </Files>
 
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond $1 !^(index\.php)$
-RewriteRule ^(.+?)/([0-9]+)/?$ index.php?action=$1&id=$2 [QSA,L]
-RewriteRule ^(.*[^/]+)/?$  index.php?action=$1 [QSA,L]
-RewriteRule ^(.*)/?$  index.php?action=$1 [QSA,L]
+RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ".?" "-" [S=2]
+    RewriteRule ^(.+?)/([0-9]+)/?$ index.php?action=$1&id=$2 [QSA,L]
+    RewriteRule ^(.*)/?$ index.php?action=$1 [QSA,L]
