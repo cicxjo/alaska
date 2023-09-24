@@ -3,9 +3,9 @@ PHPCBF = phpcbf
 SRC    = App
 
 lint:
-	${PHPCS} --standard=ruleset.xml ${SRC}
+	${PHPCS} --standard=PSR2 --report=emacs ${SRC}
 
 fix:
-	${PHPCBF} --standard=ruleset.xml ${SRC}
+	${PHPCBF} --standard=PSR2 ${SRC}
 
 .PHONY: lint fix clean
