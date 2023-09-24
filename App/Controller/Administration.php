@@ -115,13 +115,19 @@ class Administration extends AbstractController
 
             $id = (int) $id;
             $article = $this->articleManager->getById($id);
-            $data = [
-                'title' => 'Panneau d’administration',
-                'url' => $this->config->getWebsiteUrl(),
-                'domain' => $this->config->getWebsiteDomain(),
-                'tinymce' => true,
-                'article' => $article,
-            ];
+
+            if ($article) {
+                $data = [
+                    'title' => 'Panneau d’administration',
+                    'url' => $this->config->getWebsiteUrl(),
+                    'domain' => $this->config->getWebsiteDomain(),
+                    'tinymce' => true,
+                    'article' => $article,
+                ];
+            } else {
+                throw new HTTPException(404);
+                return;
+            }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($_POST['article_title'] && $_POST['article_content']) {
@@ -157,8 +163,15 @@ class Administration extends AbstractController
             }
 
             $id = (int) $id;
-            $this->articleManager->delete($id);
-            header('Location: ' . Url::build('admin'));
+            $article = $this->articleManager->getById($id);
+
+            if ($article) {
+                $this->articleManager->delete($id);
+                header('Location: ' . Url::build('admin'));
+            } else {
+                throw new HTTPException(404);
+                return;
+            }
         }
     }
 }

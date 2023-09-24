@@ -38,11 +38,18 @@ class Article extends AbstractController
         }
 
         $id = (int) $id;
-        $render = new Render('Page', 'ShowArticle');
-        $render->process([
-            'article' => $this->articleManager->getById($id),
-            'url' => $this->config->getWebsiteUrl(),
-            'domain' => $this->config->getWebsiteDomain(),
-        ]);
+        $article = $this->articleManager->getById($id);
+
+        if ($article) {
+            $render = new Render('Page', 'ShowArticle');
+            $render->process([
+                'article' => $article,
+                'url' => $this->config->getWebsiteUrl(),
+                'domain' => $this->config->getWebsiteDomain(),
+            ]);
+        } else {
+            throw new HTTPException(404);
+            return;
+        }
     }
 }
