@@ -24,8 +24,8 @@ class Article extends AbstractController
         $render = new Render('Page', 'ListArticles');
         $render->process([
             'title' => 'Billet simple pour l’Alaska',
-            'url' => $this->config->getUrl(),
-            'domain' => $this->config->getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
             'articles' => $this->articleManager->getAll(),
         ]);
     }
@@ -41,8 +41,8 @@ class Article extends AbstractController
         $render = new Render('Page', 'ShowArticle');
         $render->process([
             'article' => $this->articleManager->getById($id),
-            'url' => $this->config->getUrl(),
-            'domain' => $this->config->getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
         ]);
     }
 }

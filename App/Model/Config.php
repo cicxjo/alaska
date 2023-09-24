@@ -11,8 +11,8 @@ class Config
     private string $databaseUsername;
     private string $databasePassword;
     private bool $databaseDebug;
-    private string $url;
-    private string $domain;
+    private string $websiteUrl;
+    private string $websiteDomain;
     private bool $websiteRewrite;
 
     private function __construct()
@@ -24,8 +24,10 @@ class Config
         $this->databaseUsername = $config['database']['username'];
         $this->databasePassword = $config['database']['password'];
         $this->databaseDebug = $config['database']['debug'];
-        $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
-        $this->domain = $_SERVER['HTTP_HOST'];
+        $this->websiteUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
+        // $this->websiteUrl = $config['website']['url'];
+        $this->websiteDomain = $_SERVER['HTTP_HOST'];
+        // $this->websiteDomain = $config['website']['domain'];
         $this->websiteRewrite = $config['website']['rewrite'];
     }
 
@@ -58,14 +60,14 @@ class Config
         return $this->databaseDebug;
     }
 
-    public function getUrl(): string
+    public function getWebsiteUrl(): string
     {
-        return $this->url;
+        return $this->websiteUrl;
     }
 
-    public function getDomain(): string
+    public function getWebsiteDomain(): string
     {
-        return $this->domain;
+        return $this->websiteDomain;
     }
 
     public function getWebsiteRewrite(): bool

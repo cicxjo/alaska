@@ -64,8 +64,8 @@ class Administration extends AbstractController
             $render = new Render('Page', 'AdministrationPanel');
             $render->process([
             'title' => 'Panneau d’administration',
-            'url' => $this->config->getUrl(),
-            'domain' => $this->config->getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
             'articles' => $this->articleManager->getAll(),
             ]);
         }
@@ -76,8 +76,8 @@ class Administration extends AbstractController
         if ($this->authenticate()) {
             $data = [
                 'title' => 'Panneau d’administration',
-                'url' => $this->config->getUrl(),
-                'domain' => $this->config->getDomain(),
+                'url' => $this->config->getWebsiteUrl(),
+                'domain' => $this->config->getWebsiteDomain(),
                 'tinymce' => true,
             ];
 
@@ -117,8 +117,8 @@ class Administration extends AbstractController
             $article = $this->articleManager->getById($id);
             $data = [
                 'title' => 'Panneau d’administration',
-                'url' => $this->config->getUrl(),
-                'domain' => $this->config->getDomain(),
+                'url' => $this->config->getWebsiteUrl(),
+                'domain' => $this->config->getWebsiteDomain(),
                 'tinymce' => true,
                 'article' => $article,
             ];

@@ -25,8 +25,8 @@ class HTTPError extends AbstractController
         http_response_code($this->code);
         $render->process([
             'title' => $this->code . ' - ' . $this->httpStatus[$this->code],
-            'url' => $this->config->getUrl(),
-            'domain' => $this->config->getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
             'message' => $this->code . ' - ' . $this->httpStatus[$this->code],
         ]);
     }

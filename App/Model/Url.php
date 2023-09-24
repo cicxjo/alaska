@@ -58,6 +58,6 @@ class Url
             ? $instance->buildWithRewrite($action, $parameters)
             : $instance->buildWithoutRewrite($action, $parameters);
 
-        return $instance->config->getUrl() . $url;
+        return $instance->config->getWebsiteUrl() . $url;
     }
 }
