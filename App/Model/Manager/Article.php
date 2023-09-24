@@ -64,8 +64,7 @@ class Article
 
         $sql .= <<<HEREDOC
         FROM {$this->articleTable}
-        LEFT JOIN {$this->commentTable}
-            ON {$this->articleTable}.id = {$this->commentTable}.fk_article_id
+        LEFT JOIN {$this->commentTable} ON {$this->articleTable}.id = {$this->commentTable}.fk_article_id
         HEREDOC;
 
         return $sql;
@@ -76,30 +75,30 @@ class Article
         $articles = [];
         $comments = [];
 
-        $query = $this->pdoHandler->execute($sql);
+        $query = $this->pdoHandler
+                      ->execute($sql);
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $article = new ArticleEntity();
-            $article->setId($row[$this->articleAlias.'_id'])
-                    ->setInsertedAt($row[$this->articleAlias.'_inserted_at'])
-                    ->setModifiedAt($row[$this->articleAlias.'_modified_at'])
-                    ->setTitle($row[$this->articleAlias.'_title'])
-                    ->setContent($row[$this->articleAlias.'_content']);
+            $article->setId($row[$this->articleAlias . '_id'])
+                    ->setInsertedAt($row[$this->articleAlias . '_inserted_at'])
+                    ->setModifiedAt($row[$this->articleAlias . '_modified_at'])
+                    ->setTitle($row[$this->articleAlias . '_title'])
+                    ->setContent($row[$this->articleAlias . '_content']);
 
             if (!in_array($article, $articles)) {
                 $articles[$article->getId()] = $article;
             }
 
-            if ($row[$this->commentAlias.'_id']) {
+            if ($row[$this->commentAlias . '_id']) {
                 $comment = new CommentEntity();
-                $comment->setId($row[$this->commentAlias.'_id'])
-                        ->setFkArticleId($row[$this->commentAlias
-                            .'_fk_article_id'])
-                        ->setName($row[$this->commentAlias.'_name'])
-                        ->setEmail($row[$this->commentAlias.'_email'])
-                        ->setIsFlagged($row[$this->commentAlias.'_is_flagged'])
-                        ->setContent($row[$this->commentAlias.'_content'])
-                        ->setInsertAt($row[$this->commentAlias.'_inserted_at']);
+                $comment->setId($row[$this->commentAlias . '_id'])
+                        ->setFkArticleId($row[$this->commentAlias . '_fk_article_id'])
+                        ->setName($row[$this->commentAlias . '_name'])
+                        ->setEmail($row[$this->commentAlias . '_email'])
+                        ->setIsFlagged($row[$this->commentAlias . '_is_flagged'])
+                        ->setContent($row[$this->commentAlias . '_content'])
+                        ->setInsertAt($row[$this->commentAlias . '_inserted_at']);
                 $comments[$comment->getFkArticleId()][] = $comment;
             }
         }
@@ -108,7 +107,7 @@ class Article
             $articles[$key]->setComments($value);
         }
 
-        return !empty($articles) ? array_values($articles) : null;
+        return empty($articles) ? null : array_values($articles);
     }
 
     public function getAll(): ?array
@@ -124,7 +123,7 @@ class Article
             }
         }
 
-        return !empty($articles) ? $articles : null;
+        return empty($articles) ? null : $articles;
     }
 
     public function getById(int $id): ?ArticleEntity
@@ -140,7 +139,7 @@ class Article
             }
         }
 
-        return !empty($article) ? $article[0] : null;
+        return empty($article) ? null : $article[0];
     }
 
     public function create(ArticleEntity $entity): void
@@ -157,7 +156,8 @@ class Article
         ];
 
         try {
-            $this->pdoHandler->execute($sql, $values);
+            $this->pdoHandler
+                 ->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -173,7 +173,8 @@ class Article
         HEREDOC;
 
         try {
-            $this->pdoHandler->execute($sql);
+            $this->pdoHandler
+                 ->execute($sql);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -195,7 +196,8 @@ class Article
         ];
 
         try {
-            $this->pdoHandler->execute($sql, $values);
+            $this->pdoHandler
+                 ->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());

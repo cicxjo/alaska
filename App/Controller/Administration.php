@@ -38,15 +38,13 @@ class Administration
             header('WWW-Authenticate: Basic realm="My Realm"');
         }
 
-        if (isset($_SERVER['PHP_AUTH_USER'])
-            && isset($_SERVER['PHP_AUTH_PW'])) {
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $user = $this->userManager
                          ->getByUsername($_SERVER['PHP_AUTH_USER']);
             $hashPassword = hash('sha256', $_SERVER['PHP_AUTH_PW']);
 
             if ($user) {
-                if ($_SERVER['PHP_AUTH_USER'] === $user->getUsername()
-                    && $hashPassword === $user->getPassword()) {
+                if ($_SERVER['PHP_AUTH_USER'] === $user->getUsername() && $hashPassword === $user->getPassword()) {
                     return true;
                 } else {
                     destroySessionAndSendHeader();
@@ -92,17 +90,13 @@ class Administration
                     return;
                 }
 
-                if (empty($_POST['article_title'])) {
-                    $data['form']['article_title'] = false;
-                } else {
-                    $data['form']['article_title'] = $_POST['article_title'];
-                }
+                empty($_POST['article_title'])
+                    ? $data['form']['article_title'] = false
+                    : $data['form']['article_title'] = $_POST['article_title'];
 
-                if (empty($_POST['article_content'])) {
-                    $data['form']['article_content'] = false;
-                } else {
-                    $data['form']['article_content'] =$_POST['article_content'];
-                }
+                empty($_POST['article_content'])
+                    ? $data['form']['article_content'] = false
+                    : $data['form']['article_content'] =$_POST['article_content'];
             }
 
             $render = new Render('Page', 'ArticleEditor');
@@ -139,17 +133,13 @@ class Administration
                     return;
                 }
 
-                if (empty($_POST['article_title'])) {
-                    $data['form']['article_title'] = false;
-                } else {
-                    $data['form']['article_title'] = $_POST['article_title'];
-                }
+                empty($_POST['article_title'])
+                    ? $data['form']['article_title'] = false
+                    : $data['form']['article_title'] = $_POST['article_title'];
 
-                if (empty($_POST['article_content'])) {
-                    $data['form']['article_content'] = false;
-                } else {
-                    $data['form']['article_content'] =$_POST['article_content'];
-                }
+                empty($_POST['article_content'])
+                    ? $data['form']['article_content'] = false
+                    : $data['form']['article_content'] =$_POST['article_content'];
             }
 
             $render = new Render('Page', 'ArticleEditor');

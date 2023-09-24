@@ -39,6 +39,6 @@ class User
             }
         }
 
-        return !empty($user) ? $user[0] : null;
+        return empty($user) ? null : $user[0];
     }
 }

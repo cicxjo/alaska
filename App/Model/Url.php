@@ -23,10 +23,8 @@ class Url
         return self::$instance;
     }
 
-    private function buildWithoutRewrite(
-        string $action,
-        ?array $parameter = null
-    ): string {
+    private function buildWithoutRewrite(string $action, ?array $parameter = null): string
+    {
         $url = '?action=' . $action;
 
         if ($parameter) {
@@ -38,10 +36,8 @@ class Url
         return $url;
     }
 
-    private function buildWithRewrite(
-        string $action,
-        ?array $parameter = null
-    ): string {
+    private function buildWithRewrite(string $action, ?array $parameter = null): string
+    {
         $url = '/' . $action;
 
         if ($parameter) {
@@ -53,10 +49,8 @@ class Url
         return $url;
     }
 
-    public static function build(
-        string $action,
-        ?array $parameters = null
-    ): string {
+    public static function build(string $action, ?array $parameters = null): string
+    {
         $instance = self::getInstance();
         $url = $instance->rewrite
             ? $instance->buildWithRewrite($action, $parameters)

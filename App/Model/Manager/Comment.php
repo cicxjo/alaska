@@ -30,21 +30,22 @@ class Comment
         HEREDOC;
 
         $sql .= isset($flagged)
-        ? ($flagged
-            ? ' WHERE is_flagged = 1'
-            : ' WHERE is_flagged = 0')
-        : '';
+            ? ($flagged
+                ? ' WHERE is_flagged = 1'
+                : ' WHERE is_flagged = 0')
+            : '';
 
         try {
-            $comments = $this->pdoHandler->execute($sql)
-                ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
+            $comments = $this->pdoHandler
+                             ->execute($sql)
+                             ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
 
-        return !empty($comments) ? $comments : null;
+        return empty($comments) ? null : $comments;
     }
 
     public function getById(int $id): ?CommentEntity
@@ -55,22 +56,22 @@ class Comment
         HEREDOC;
 
         try {
-            $comment = $this->pdoHandler->execute($sql)
-                ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
+            $comment = $this->pdoHandler
+                            ->execute($sql)
+                            ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
 
-        return !empty($comment) ? $comment[0] : null;
+        return empty($comment) ? null : $comment[0];
     }
 
     public function create(CommentEntity $entity): void
     {
         $sql = <<<HEREDOC
-        INSERT INTO {$this->commentTable}
-        (name, email, content, fk_article_id)
+        INSERT INTO {$this->commentTable} (name, email, content, fk_article_id)
         VALUES (:name, :email, :content, :fk_article_id)
         HEREDOC;
 
@@ -83,7 +84,8 @@ class Comment
 
 
         try {
-            $this->pdoHandler->execute($sql, $values);
+            $this->pdoHandler
+                 ->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -102,7 +104,8 @@ class Comment
         $values = ['is_flagged' => $flagged ? 1 : 0];
 
         try {
-            $this->pdoHandler->execute($sql, $values);
+            $this->pdoHandler
+                 ->execute($sql, $values);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -118,7 +121,8 @@ class Comment
         HEREDOC;
 
         try {
-            $this->pdoHandler->execute($sql);
+            $this->pdoHandler
+                 ->execute($sql);
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());

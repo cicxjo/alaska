@@ -15,18 +15,14 @@ class PDOHandler
 
     private function __construct()
     {
-        $dsn  = 'mysql:host=localhost;dbname=';
-        $dsn .= Config::getDatabaseName();
-        $dsn .= ';charset=utf8mb4';
+        $dsn  = 'mysql:host=localhost;dbname=' . Config::getDatabaseName() . ';charset=utf8mb4';
 
         try {
             $this->pdo = new PDO(
                 $dsn,
                 Config::getDatabaseUsername(),
                 Config::getDatabasePassword(),
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                ]
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
         } catch (PDOException $e) {
             if (Config::getDatabaseDebug()) {

@@ -24,8 +24,7 @@ class Config
         $this->databaseUsername = $config['database']['username'];
         $this->databasePassword = $config['database']['password'];
         $this->databaseDebug = $config['database']['debug'];
-        $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https')
-            . "://" . $_SERVER['HTTP_HOST'];
+        $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
         $this->domain = $_SERVER['HTTP_HOST'];
         $this->websiteRewrite = $config['website']['rewrite'];
     }
