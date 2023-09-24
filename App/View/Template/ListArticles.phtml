@@ -20,7 +20,7 @@
                         </time>
                     </small>
                 </p>
-                <a href="<?= $url ?>/article/<?= $article->getId() ?>" class="btn btn-outline-primary btn-sm">Lire l’article</a>
+                <a href="<?= \App\Model\Url::build('article', ['id' => $article->getId()]) ?>" class="btn btn-outline-primary btn-sm">Lire l’article</a>
             </div>
         <?php endforeach ?>
     </main>

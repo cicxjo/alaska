@@ -10,6 +10,7 @@ use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
+use App\Model\Url;
 
 class Administration
 {
@@ -87,7 +88,7 @@ class Administration
                     $article->setTitle($_POST['article_title'])
                             ->setContent($_POST['article_content']);
                     $this->articleManager->create($article);
-                    header('Location: ' . Config::getUrl() . '/admin');
+                    header('Location: ' . Url::build('admin'));
                     return;
                 }
 
@@ -134,7 +135,7 @@ class Administration
                             ->setContent($_POST['article_content'])
                             ->setId($id);
                     $this->articleManager->update($article);
-                    header('Location: ' . Config::getUrl() . '/admin');
+                    header('Location: ' . Url::build('admin'));
                     return;
                 }
 
@@ -166,7 +167,7 @@ class Administration
 
             $id = (int) $id;
             $this->articleManager->delete($id);
-            header('Location: ' . Config::getUrl() . '/admin');
+            header('Location: ' . Url::build('admin'));
         }
     }
 }
