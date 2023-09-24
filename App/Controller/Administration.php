@@ -23,38 +23,44 @@ class Administration extends AbstractController
         $this->userManager = new UserManager();
     }
 
-    private function authenticate(): bool
+    public function authenticate(): bool
     {
-        function destroySessionAndSendHeader()
-        {
-            if (isset($_SERVER['PHP_AUTH_USER'])) {
-                unset($_SERVER['PHP_AUTH_USER']);
-            }
+        session_start();
 
-            if (isset($_SERVER['PHP_AUTH_PW'])) {
-                unset($_SERVER['PHP_AUTH_PW']);
-            }
+        $data = [
+            'title' => 'Connectez-vous',
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
+        ];
 
-            header('WWW-Authenticate: Basic realm="My Realm"');
-        }
+        if (isset($_SESSION['authenticated'])) {
+            return true;
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['auth_username']) && isset($_POST['auth_password'])) {
+                $user = $this->userManager->getByUsername($_POST['auth_username']);
 
-        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-            $user = $this->userManager
-                         ->getByUsername($_SERVER['PHP_AUTH_USER']);
-            $hashPassword = hash('sha256', $_SERVER['PHP_AUTH_PW']);
-
-            if ($user) {
-                if ($_SERVER['PHP_AUTH_USER'] === $user->getUsername() && $hashPassword === $user->getPassword()) {
-                    return true;
-                } else {
-                    destroySessionAndSendHeader();
+                if ($user) {
+                    if ($_POST['auth_username'] === $user->getUsername()
+                        && hash('sha256', $_POST['auth_password']) === $user->getPassword()) {
+                            $_SESSION['authenticated'] = true;
+                            header('Location: ' . $this->url->build('admin'));
+                            return true;
+                    }
                 }
-            } else {
-                destroySessionAndSendHeader();
             }
-        } else {
-            destroySessionAndSendHeader();
+
+            empty($_POST['auth_username'])
+                ? $data['form']['auth_username'] = false
+                : $data['form']['auth_username'] = $_POST['auth_username'];
+
+            empty($_POST['auth_password'])
+                ? $data['form']['auth_password'] = false
+                : $data['form']['auth_password'] = $_POST['auth_password'];
         }
+
+        $render = new Render('Page', 'AuthenticationPanel');
+        $render->process($data);
+        return false;
     }
 
     public function showPanel(): void
