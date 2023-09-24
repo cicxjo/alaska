@@ -23,7 +23,7 @@ foreach ($articles as $article) {
         </header>
 
         <div class="mt-5">
-            <a class="btn btn-primary" href="<?= $url ?>/admin/ajouter/article">Ajouter un article</a>
+            <a class="btn btn-primary" href="<?= \App\Model\Url::build('admin/ajouter/article') ?>">Ajouter un article</a>
         </div>
 
         <div class="mt-5">
@@ -45,9 +45,9 @@ foreach ($articles as $article) {
                 </div>
                 <div class="card-body">
                     <p><?= htmlspecialchars($comment->getContent()) ?></p>
-                    <a class="btn btn-outline-success" href="<?= $url ?>/approuver/commentaire/<?= $comment->getId() ?>">Approuver</a>
-                    <a class="btn btn-outline-danger" href="<?= $url ?>/supprimer/commentaire/<?= $comment->getId() ?>">Supprimer</a>
-                    <a class="btn btn-outline-secondary" href="<?= $url ?>/article/<?= $comment->getFkArticleId() ?>">Voir l’article</a>
+                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('approuver/commentaire', ['id' => $comment->getId()]) ?>">Approuver</a>
+                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('supprimer/commentaire', ['id' => $comment->getId()]) ?>">Supprimer</a>
+                    <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('/article/', ['id' => $comment->getFkArticleId()] ) ?>">Voir l’article</a>
                 </div>
             </div>
             <?php endforeach ?>
@@ -68,9 +68,9 @@ foreach ($articles as $article) {
                         <?php endif ?>
                     </div>
                     <div class="card-body">
-                        <a class="btn btn-outline-primary " href="<?= $url ?>/admin/modifier/article/<?= $article->getId() ?>">Modifier</a>
-                        <a class="btn btn-outline-danger " href="<?= $url ?>/admin/supprimer/article/<?= $article->getId() ?>">Supprimer</a>
-                        <a class="btn btn-outline-secondary" href="<?= $url ?>/article/<?= $article->getId() ?>">Voir</a>
+                        <a class="btn btn-outline-primary " href="<?= \App\Model\Url::build('admin/modifier/article', ['id' => $article->getId()]) ?>">Modifier</a>
+                        <a class="btn btn-outline-danger " href="<?= \App\Model\Url::build('admin/supprimer/article', ['id' => $article->getId()]) ?>">Supprimer</a>
+                        <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('article', ['id' => $article->getId()]) ?>">Voir</a>
                     </div>
                 </div>
             <?php endforeach ?>

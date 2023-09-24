@@ -13,6 +13,7 @@ class Config
     private bool $databaseDebug;
     private string $url;
     private string $domain;
+    private bool $websiteRewrite;
 
     private function __construct()
     {
@@ -26,6 +27,7 @@ class Config
         $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https')
             . "://" . $_SERVER['HTTP_HOST'];
         $this->domain = $_SERVER['HTTP_HOST'];
+        $this->websiteRewrite = $config['website']['rewrite'];
     }
 
     private static function getInstance(): self
@@ -65,5 +67,10 @@ class Config
     public static function getDomain(): string
     {
         return self::getInstance()->domain;
+    }
+
+    public static function getWebsiteRewrite(): bool
+    {
+        return self::getInstance()->websiteRewrite;
     }
 }
