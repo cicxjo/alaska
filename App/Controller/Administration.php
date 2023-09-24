@@ -9,7 +9,6 @@ use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
-use App\Model\Url;
 
 class Administration extends AbstractController
 {
@@ -87,7 +86,7 @@ class Administration extends AbstractController
                     $article->setTitle($_POST['article_title'])
                             ->setContent($_POST['article_content']);
                     $this->articleManager->create($article);
-                    header('Location: ' . Url::build('admin'));
+                    header('Location: ' . $this->url->build('admin'));
                     return;
                 }
 
@@ -131,7 +130,7 @@ class Administration extends AbstractController
                             ->setContent($_POST['article_content'])
                             ->setId($id);
                     $this->articleManager->update($article);
-                    header('Location: ' . Url::build('admin'));
+                    header('Location: ' . $this->url->build('admin'));
                     return;
                 }
 
@@ -157,7 +156,7 @@ class Administration extends AbstractController
 
             if ($article) {
                 $this->articleManager->delete($id);
-                header('Location: ' . Url::build('admin'));
+                header('Location: ' . $this->url->build('admin'));
             } else {
                 throw new HTTPException(404);
                 return;
