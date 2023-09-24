@@ -14,15 +14,12 @@ class Router
 
     public function __construct()
     {
-        $this->action = isset($_GET['action']) ? $_GET['action'] : '';
-        $this->id = isset($_GET['id']) ? $_GET['id'] : null;
+        $this->action = $_GET['action'] ?? '';
+        $this->id = $_GET['id'] ?? null;
     }
 
-    public function addRoute(
-        string $action,
-        ?string $parameter,
-        array $controller
-    ): self {
+    public function addRoute(string $action, ?string $parameter, array $controller): self
+    {
         $this->routes[] = [
             'action' => $action,
             'parameter' => $parameter,

@@ -4,23 +4,15 @@ declare(strict_types = 1);
 
 namespace App\Model\Manager;
 
-use App\Model\Config;
 use App\Model\Entity\User as UserEntity;
-use App\Model\PDOHandler;
 use App\Model\PrintAndDie;
 use PDO;
 use PDOException;
 
-class User
+class User extends AbstractManager
 {
-    private PDOHandler $pdoHandler;
     private string $userEntity = UserEntity::class;
     private string $userTable = UserEntity::class::TABLE;
-
-    public function __construct()
-    {
-        $this->pdoHandler = PDOHandler::getInstance();
-    }
 
     public function getByUsername(string $username): ?UserEntity
     {
@@ -34,11 +26,11 @@ class User
                          ->execute($sql)
                          ->fetchAll(PDO::FETCH_CLASS, $this->userEntity);
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }
 
-        return !empty($user) ? $user[0] : null;
+        return empty($user) ? null : $user[0];
     }
 }

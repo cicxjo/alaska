@@ -4,21 +4,21 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Config;
 use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
-use App\Model\Url;
 
-class Administration
+class Administration extends AbstractController
 {
     private ArticleManager $articleManager;
     private UserManager $userManager;
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->articleManager = new ArticleManager();
         $this->userManager = new UserManager();
     }
@@ -38,15 +38,13 @@ class Administration
             header('WWW-Authenticate: Basic realm="My Realm"');
         }
 
-        if (isset($_SERVER['PHP_AUTH_USER'])
-            && isset($_SERVER['PHP_AUTH_PW'])) {
+        if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             $user = $this->userManager
                          ->getByUsername($_SERVER['PHP_AUTH_USER']);
             $hashPassword = hash('sha256', $_SERVER['PHP_AUTH_PW']);
 
             if ($user) {
-                if ($_SERVER['PHP_AUTH_USER'] === $user->getUsername()
-                    && $hashPassword === $user->getPassword()) {
+                if ($_SERVER['PHP_AUTH_USER'] === $user->getUsername() && $hashPassword === $user->getPassword()) {
                     return true;
                 } else {
                     destroySessionAndSendHeader();
@@ -65,8 +63,8 @@ class Administration
             $render = new Render('Page', 'AdministrationPanel');
             $render->process([
             'title' => 'Panneau d’administration',
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
             'articles' => $this->articleManager->getAll(),
             ]);
         }
@@ -77,8 +75,8 @@ class Administration
         if ($this->authenticate()) {
             $data = [
                 'title' => 'Panneau d’administration',
-                'url' => Config::getUrl(),
-                'domain' => Config::getDomain(),
+                'url' => $this->config->getWebsiteUrl(),
+                'domain' => $this->config->getWebsiteDomain(),
                 'tinymce' => true,
             ];
 
@@ -88,21 +86,17 @@ class Administration
                     $article->setTitle($_POST['article_title'])
                             ->setContent($_POST['article_content']);
                     $this->articleManager->create($article);
-                    header('Location: ' . Url::build('admin'));
+                    header('Location: ' . $this->url->build('admin'));
                     return;
                 }
 
-                if (empty($_POST['article_title'])) {
-                    $data['form']['article_title'] = false;
-                } else {
-                    $data['form']['article_title'] = $_POST['article_title'];
-                }
+                empty($_POST['article_title'])
+                    ? $data['form']['article_title'] = false
+                    : $data['form']['article_title'] = $_POST['article_title'];
 
-                if (empty($_POST['article_content'])) {
-                    $data['form']['article_content'] = false;
-                } else {
-                    $data['form']['article_content'] =$_POST['article_content'];
-                }
+                empty($_POST['article_content'])
+                    ? $data['form']['article_content'] = false
+                    : $data['form']['article_content'] =$_POST['article_content'];
             }
 
             $render = new Render('Page', 'ArticleEditor');
@@ -112,21 +106,22 @@ class Administration
 
     public function updateArticle(string $id): void
     {
-        if ($this->authenticate()) {
-            if (!ctype_digit($id)) {
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+            $article = $this->articleManager->getById($id);
+
+            if ($article) {
+                $data = [
+                    'title' => 'Panneau d’administration',
+                    'url' => $this->config->getWebsiteUrl(),
+                    'domain' => $this->config->getWebsiteDomain(),
+                    'tinymce' => true,
+                    'article' => $article,
+                ];
+            } else {
                 throw new HTTPException(404);
                 return;
             }
-
-            $id = (int) $id;
-            $article = $this->articleManager->getById($id);
-            $data = [
-                'title' => 'Panneau d’administration',
-                'url' => Config::getUrl(),
-                'domain' => Config::getDomain(),
-                'tinymce' => true,
-                'article' => $article,
-            ];
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($_POST['article_title'] && $_POST['article_content']) {
@@ -135,21 +130,17 @@ class Administration
                             ->setContent($_POST['article_content'])
                             ->setId($id);
                     $this->articleManager->update($article);
-                    header('Location: ' . Url::build('admin'));
+                    header('Location: ' . $this->url->build('admin'));
                     return;
                 }
 
-                if (empty($_POST['article_title'])) {
-                    $data['form']['article_title'] = false;
-                } else {
-                    $data['form']['article_title'] = $_POST['article_title'];
-                }
+                empty($_POST['article_title'])
+                    ? $data['form']['article_title'] = false
+                    : $data['form']['article_title'] = $_POST['article_title'];
 
-                if (empty($_POST['article_content'])) {
-                    $data['form']['article_content'] = false;
-                } else {
-                    $data['form']['article_content'] =$_POST['article_content'];
-                }
+                empty($_POST['article_content'])
+                    ? $data['form']['article_content'] = false
+                    : $data['form']['article_content'] =$_POST['article_content'];
             }
 
             $render = new Render('Page', 'ArticleEditor');
@@ -159,15 +150,17 @@ class Administration
 
     public function deleteArticle(string $id): void
     {
-        if ($this->authenticate()) {
-            if (!ctype_digit($id)) {
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+            $article = $this->articleManager->getById($id);
+
+            if ($article) {
+                $this->articleManager->delete($id);
+                header('Location: ' . $this->url->build('admin'));
+            } else {
                 throw new HTTPException(404);
                 return;
             }
-
-            $id = (int) $id;
-            $this->articleManager->delete($id);
-            header('Location: ' . Url::build('admin'));
         }
     }
 }

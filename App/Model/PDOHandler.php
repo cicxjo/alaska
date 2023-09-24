@@ -12,24 +12,23 @@ class PDOHandler
 {
     private PDO $pdo;
     private static ?self $instance = null;
+    private Config $config;
 
     private function __construct()
     {
-        $dsn  = 'mysql:host=localhost;dbname=';
-        $dsn .= Config::getDatabaseName();
-        $dsn .= ';charset=utf8mb4';
+        $this->config = Config::getInstance();
+
+        $dsn  = 'mysql:host=localhost;dbname=' . $this->config->getDatabaseName() . ';charset=utf8mb4';
 
         try {
             $this->pdo = new PDO(
                 $dsn,
-                Config::getDatabaseUsername(),
-                Config::getDatabasePassword(),
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                ]
+                $this->config->getDatabaseUsername(),
+                $this->config->getDatabasePassword(),
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
         } catch (PDOException $e) {
-            if (Config::getDatabaseDebug()) {
+            if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
             }
         }

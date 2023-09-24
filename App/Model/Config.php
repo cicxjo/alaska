@@ -11,8 +11,8 @@ class Config
     private string $databaseUsername;
     private string $databasePassword;
     private bool $databaseDebug;
-    private string $url;
-    private string $domain;
+    private string $websiteUrl;
+    private string $websiteDomain;
     private bool $websiteRewrite;
 
     private function __construct()
@@ -24,13 +24,14 @@ class Config
         $this->databaseUsername = $config['database']['username'];
         $this->databasePassword = $config['database']['password'];
         $this->databaseDebug = $config['database']['debug'];
-        $this->url = (empty($_SERVER['HTTPS']) ? 'http' : 'https')
-            . "://" . $_SERVER['HTTP_HOST'];
-        $this->domain = $_SERVER['HTTP_HOST'];
+        $this->websiteUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
+        // $this->websiteUrl = $config['website']['url'];
+        $this->websiteDomain = $_SERVER['HTTP_HOST'];
+        // $this->websiteDomain = $config['website']['domain'];
         $this->websiteRewrite = $config['website']['rewrite'];
     }
 
-    private static function getInstance(): self
+    public static function getInstance(): self
     {
         if (!self::$instance instanceof self) {
             self::$instance = new self();
@@ -39,38 +40,38 @@ class Config
         return self::$instance;
     }
 
-    public static function getDatabaseName(): string
+    public function getDatabaseName(): string
     {
-        return self::getInstance()->databaseName;
+        return $this->databaseName;
     }
 
-    public static function getDatabaseUsername(): string
+    public function getDatabaseUsername(): string
     {
-        return self::getInstance()->databaseUsername;
+        return $this->databaseUsername;
     }
 
-    public static function getDatabasePassword(): string
+    public function getDatabasePassword(): string
     {
-        return self::getInstance()->databasePassword;
+        return $this->databasePassword;
     }
 
-    public static function getDatabaseDebug(): bool
+    public function getDatabaseDebug(): bool
     {
-        return self::getInstance()->databaseDebug;
+        return $this->databaseDebug;
     }
 
-    public static function getUrl(): string
+    public function getWebsiteUrl(): string
     {
-        return self::getInstance()->url;
+        return $this->websiteUrl;
     }
 
-    public static function getDomain(): string
+    public function getWebsiteDomain(): string
     {
-        return self::getInstance()->domain;
+        return $this->websiteDomain;
     }
 
-    public static function getWebsiteRewrite(): bool
+    public function getWebsiteRewrite(): bool
     {
-        return self::getInstance()->websiteRewrite;
+        return $this->websiteRewrite;
     }
 }

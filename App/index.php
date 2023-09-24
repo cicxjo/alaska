@@ -12,11 +12,11 @@ $router->addRoute('/', null, ['App\Controller\Article', 'listArticles'])
        ->addRoute('/admin', null, ['App\Controller\Administration', 'showPanel'])
        ->addRoute('/admin/ajouter/article', null, ['App\Controller\Administration', 'addArticle'])
        ->addRoute('/admin/supprimer/article', 'id', ['App\Controller\Administration', 'deleteArticle'])
-       ->addRoute('/admin/supprimer/article', 'id', ['App\Controller\Administration', 'deleteArticle'])
        ->addRoute('/admin/modifier/article', 'id', ['App\Controller\Administration', 'updateArticle']);
 
 try {
     $router->run();
 } catch (App\Model\Exception\HTTPException $e) {
-    App\Controller\HTTPError::send($e->getCode());
+    $httpError = new App\Controller\HTTPError($e->getCode());
+    $httpError->send($e->getCode());
 }

@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace App\Controller;
 
-use App\Model\Config;
 use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
 use App\Model\Render;
 
-class Article
+class Article extends AbstractController
 {
     private ArticleManager $articleManager;
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->articleManager = new ArticleManager();
     }
 
@@ -23,25 +24,28 @@ class Article
         $render = new Render('Page', 'ListArticles');
         $render->process([
             'title' => 'Billet simple pour l’Alaska',
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
+            'url' => $this->config->getWebsiteUrl(),
+            'domain' => $this->config->getWebsiteDomain(),
             'articles' => $this->articleManager->getAll(),
         ]);
     }
 
     public function showArticle(string $id): void
     {
-        if (!ctype_digit($id)) {
-            throw new HTTPException(404);
-            return;
-        }
+        if ($this->isValidId($id)) {
+            $article = $this->articleManager->getById((int) $id);
 
-        $id = (int) $id;
-        $render = new Render('Page', 'ShowArticle');
-        $render->process([
-            'article' => $this->articleManager->getById($id),
-            'url' => Config::getUrl(),
-            'domain' => Config::getDomain(),
-        ]);
+            if ($article) {
+                $render = new Render('Page', 'ShowArticle');
+                $render->process([
+                    'article' => $article,
+                    'url' => $this->config->getWebsiteUrl(),
+                    'domain' => $this->config->getWebsiteDomain(),
+                ]);
+            } else {
+                throw new HTTPException(404);
+                return;
+            }
+        }
     }
 }

@@ -19,12 +19,12 @@ class Render
 
     private function getLayoutPath(): string
     {
-        return realpath($this->viewPath.'/Layout/'.$this->layout.'.phtml');
+        return realpath($this->viewPath . '/Layout/' . $this->layout . '.phtml');
     }
 
     private function getTemplatePath(): string
     {
-        return realpath($this->viewPath.'/Template/'.$this->template.'.phtml');
+        return realpath($this->viewPath . '/Template/' . $this->template . '.phtml');
     }
 
     public function process(array $vars = []): void
