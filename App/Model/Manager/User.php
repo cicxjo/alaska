@@ -18,12 +18,12 @@ class User extends AbstractManager
     {
         $sql = <<<HEREDOC
         SELECT * FROM user
-        WHERE username = '{$username}'
+        WHERE username = :username
         HEREDOC;
 
         try {
             $user = $this->pdoHandler
-                         ->execute($sql)
+                         ->execute($sql, ['username' => $username])
                          ->fetchAll(PDO::FETCH_CLASS, $this->userEntity);
         } catch (PDOException $e) {
             if ($this->config->getDatabaseDebug()) {
