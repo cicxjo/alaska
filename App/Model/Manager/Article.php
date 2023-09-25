@@ -68,13 +68,13 @@ class Article extends AbstractManager
         return $sql;
     }
 
-    private function getWithComments(string $sql): ?array
+    private function getWithComments(string $sql, ?array $args = null): ?array
     {
         $articles = [];
         $comments = [];
 
         $query = $this->pdoHandler
-                      ->execute($sql);
+                      ->execute($sql, $args);
 
         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
             $article = new ArticleEntity();
@@ -127,10 +127,10 @@ class Article extends AbstractManager
     public function getById(int $id): ?ArticleEntity
     {
         $sql = $this->get();
-        $sql .= "\n" . 'WHERE ' . $this->articleTable . '.id = ' . $id;
+        $sql .= "\n" . 'WHERE ' . $this->articleTable . '.id = :id';
 
         try {
-            $article = $this->getWithComments($sql);
+            $article = $this->getWithComments($sql, ['id' => $id]);
         } catch (PDOException $e) {
             if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -167,12 +167,12 @@ class Article extends AbstractManager
     {
         $sql = <<<HEREDOC
         DELETE FROM {$this->articleTable}
-        WHERE id = {$id}
+        WHERE id = :id
         HEREDOC;
 
         try {
             $this->pdoHandler
-                 ->execute($sql);
+                 ->execute($sql, ['id' => $id]);
         } catch (PDOException $e) {
             if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
@@ -185,12 +185,13 @@ class Article extends AbstractManager
         $sql = <<<HEREDOC
         UPDATE {$this->articleTable}
         SET title = :title, content = :content
-        WHERE id = {$entity->getId()}
+        WHERE id = :id
         HEREDOC;
 
         $values = [
             'title' => $entity->getTitle(),
             'content' => $entity->getContent(),
+            'id' => $entity->getId()
         ];
 
         try {
