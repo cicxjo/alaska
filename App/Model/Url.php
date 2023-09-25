@@ -26,13 +26,11 @@ class Url
         }
 
         if ($parameters) {
-            for ($i=0; $i < count($parameters); $i++) {
-                $parameters = current($parameters);
-
+            for ($i=0; $i < count(array_keys($parameters)); $i++) {
                 if ($i === 0) {
-                    $url .= '?' . key($parameters[$i]) . '=' . $parameters[$i];
+                    $url .= '?' . array_keys($parameters)[$i] . '=' . $parameters[array_keys($parameters)[$i]];
                 } else {
-                    $url .= '&' . key($parameters[$i]) . '=' . $parameters[$i];
+                    $url .= '&' . array_keys($parameters)[$i] . '=' . $parameters[array_keys($parameters)[$i]];
                 }
             }
         }
