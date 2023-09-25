@@ -44,12 +44,12 @@ class Comment extends AbstractManager
     {
         $sql = <<<HEREDOC
         SELECT * FROM {$this->commentTable}
-        WHERE id = {$id}
+        WHERE id = :id
         HEREDOC;
 
         try {
             $comment = $this->pdoHandler
-                            ->execute($sql)
+                            ->execute($sql, ['id' => $id])
                             ->fetchAll(PDO::FETCH_CLASS, $this->commentEntity);
         } catch (PDOException $e) {
             if ($this->config->getDatabaseDebug()) {
@@ -90,10 +90,13 @@ class Comment extends AbstractManager
         $sql = <<<HEREDOC
         UPDATE {$this->commentTable}
         SET is_flagged = :is_flagged
-        WHERE id = {$id}
+        WHERE id = :id
         HEREDOC;
 
-        $values = ['is_flagged' => $flagged ? 1 : 0];
+        $values = [
+            'is_flagged' => $flagged ? 1 : 0,
+            'id' => $id,
+        ];
 
         try {
             $this->pdoHandler
@@ -109,12 +112,12 @@ class Comment extends AbstractManager
     {
         $sql = <<<HEREDOC
         DELETE FROM {$this->commentTable}
-        WHERE id = {$id}
+        WHERE id = :id
         HEREDOC;
 
         try {
             $this->pdoHandler
-                 ->execute($sql);
+                 ->execute($sql, ['id' => $id]);
         } catch (PDOException $e) {
             if ($this->config->getDatabaseDebug()) {
                 PrintAndDie::vars($e->getMessage());
