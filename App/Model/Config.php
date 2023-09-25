@@ -13,7 +13,6 @@ class Config
     private bool $databaseDebug;
     private string $websiteUrl;
     private string $websiteDomain;
-    private bool $websiteRewrite;
 
     private function __construct()
     {
@@ -28,7 +27,6 @@ class Config
         // $this->websiteUrl = $config['website']['url'];
         $this->websiteDomain = $_SERVER['HTTP_HOST'];
         // $this->websiteDomain = $config['website']['domain'];
-        $this->websiteRewrite = $config['website']['rewrite'];
     }
 
     public static function getInstance(): self
@@ -68,10 +66,5 @@ class Config
     public function getWebsiteDomain(): string
     {
         return $this->websiteDomain;
-    }
-
-    public function getWebsiteRewrite(): bool
-    {
-        return $this->websiteRewrite;
     }
 }

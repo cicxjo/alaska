@@ -110,8 +110,10 @@ class Administration extends AbstractController
         }
     }
 
-    public function updateArticle(string $id): void
+    public function updateArticle(?array $parameters): void
     {
+        $id = $parameters['id'] ?? null;
+
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
             $article = $this->articleManager->getById($id);
@@ -154,8 +156,10 @@ class Administration extends AbstractController
         }
     }
 
-    public function deleteArticle(string $id): void
+    public function deleteArticle(?array $parameters): void
     {
+        $id = $parameters['id'] ?? null;
+
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
             $article = $this->articleManager->getById($id);

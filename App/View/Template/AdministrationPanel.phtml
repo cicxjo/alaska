@@ -47,9 +47,9 @@ if ($articles) {
                 </div>
                 <div class="card-body">
                     <p><?= htmlspecialchars($comment->getContent()) ?></p>
-                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('approuver/commentaire', ['id' => $comment->getId()]) ?>">Approuver</a>
-                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('supprimer/commentaire', ['id' => $comment->getId()]) ?>">Supprimer</a>
-                    <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('/article/', ['id' => $comment->getFkArticleId()]) ?>">Voir l’article</a>
+                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('approuver/commentaire', $comment->getId()) ?>">Approuver</a>
+                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('supprimer/commentaire', $comment->getId()) ?>">Supprimer</a>
+                    <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('/article/', $comment->getFkArticleId()) ?>">Voir l’article</a>
                 </div>
             </div>
             <?php endforeach ?>
@@ -71,9 +71,9 @@ if ($articles) {
                             <?php endif ?>
                         </div>
                         <div class="card-body">
-                            <a class="btn btn-outline-primary " href="<?= \App\Model\Url::build('admin/modifier/article', ['id' => $article->getId()]) ?>">Modifier</a>
-                            <a class="btn btn-outline-danger " href="<?= \App\Model\Url::build('admin/supprimer/article', ['id' => $article->getId()]) ?>">Supprimer</a>
-                            <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('article', ['id' => $article->getId()]) ?>">Voir</a>
+                            <a class="btn btn-outline-primary " href="<?= \App\Model\Url::build('admin/modifier/article', $article->getId()) ?>">Modifier</a>
+                            <a class="btn btn-outline-danger " href="<?= \App\Model\Url::build('admin/supprimer/article', $article->getId()) ?>">Supprimer</a>
+                            <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('article', $article->getId()) ?>">Voir</a>
                         </div>
                     </div>
                 <?php endforeach ?>

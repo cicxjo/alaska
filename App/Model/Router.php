@@ -10,19 +10,21 @@ class Router
 {
     private array $routes = [];
     private string $action;
-    private ?string $id;
+    private array $parameters = [];
 
     public function __construct()
     {
         $this->action = $_GET['action'] ?? '';
-        $this->id = $_GET['id'] ?? null;
+
+        foreach ($_GET as $key => $value) {
+            $this->parameters[$key] = $value;
+        }
     }
 
-    public function addRoute(string $action, ?string $parameter, array $controller): self
+    public function addRoute(string $action, array $controller): self
     {
         $this->routes[] = [
             'action' => $action,
-            'parameter' => $parameter,
             'controller' => $controller,
         ];
 
@@ -34,10 +36,9 @@ class Router
         $controller = $route['controller'];
         $class = $controller[0];
         $method = $controller[1];
-        $parameter = $route['parameter'];
 
         $class = new $class();
-        $class->$method($this->$parameter ?? null);
+        $class->$method($this->parameters ?? null);
     }
 
     public function run(): void

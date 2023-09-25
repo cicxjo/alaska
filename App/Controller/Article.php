@@ -30,8 +30,10 @@ class Article extends AbstractController
         ]);
     }
 
-    public function showArticle(string $id): void
+    public function showArticle(?array $parameters): void
     {
+        $id = $parameters['id'] ?? null;
+
         if ($this->isValidId($id)) {
             $article = $this->articleManager->getById((int) $id);
 

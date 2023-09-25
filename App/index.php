@@ -7,12 +7,12 @@ require_once(__DIR__ . '/Autoloader.php');
 App\Autoloader::register();
 
 $router = new App\Model\Router();
-$router->addRoute('/', null, ['App\Controller\Article', 'listArticles'])
-       ->addRoute('/article', 'id', ['App\Controller\Article', 'showArticle'])
-       ->addRoute('/admin', null, ['App\Controller\Administration', 'showPanel'])
-       ->addRoute('/admin/ajouter/article', null, ['App\Controller\Administration', 'addArticle'])
-       ->addRoute('/admin/supprimer/article', 'id', ['App\Controller\Administration', 'deleteArticle'])
-       ->addRoute('/admin/modifier/article', 'id', ['App\Controller\Administration', 'updateArticle']);
+$router->addRoute('/', ['App\Controller\Article', 'listArticles'])
+       ->addRoute('/article', ['App\Controller\Article', 'showArticle'])
+       ->addRoute('/admin', ['App\Controller\Administration', 'showPanel'])
+       ->addRoute('/admin/ajouter/article', ['App\Controller\Administration', 'addArticle'])
+       ->addRoute('/admin/supprimer/article', ['App\Controller\Administration', 'deleteArticle'])
+       ->addRoute('/admin/modifier/article', ['App\Controller\Administration', 'updateArticle']);
 
 try {
     $router->run();

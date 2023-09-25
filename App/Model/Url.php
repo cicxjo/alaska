@@ -7,14 +7,6 @@ namespace App\Model;
 class Url
 {
     private static ?self $instance = null;
-    private bool $rewrite;
-    private Config $config;
-
-    private function __construct()
-    {
-        $this->config = Config::getInstance();
-        $this->rewrite = $this->config->getWebsiteRewrite();
-    }
 
     public static function getInstance(): self
     {
@@ -25,39 +17,26 @@ class Url
         return self::$instance;
     }
 
-    private function buildWithoutRewrite(string $action, ?array $parameter = null): string
-    {
-        $url = '?action=' . $action;
-
-        if ($parameter) {
-            foreach ($parameter as $key => $value) {
-                $url .= '&' . $key . '=' . $value;
-            }
-        }
-
-        return $url;
-    }
-
-    private function buildWithRewrite(string $action, ?array $parameter = null): string
+    public static function build(string $action, ?int $id = null, ?array $parameters = null): string
     {
         $url = '/' . $action;
 
-        if ($parameter) {
-            foreach ($parameter as $key => $value) {
-                $url .= '/' . $value;
+        if ($id) {
+            $url .= '/' . $id;
+        }
+
+        if ($parameters) {
+            for ($i=0; $i < count($parameters); $i++) {
+                $parameters = current($parameters);
+
+                if ($i === 0) {
+                    $url .= '?' . key($parameters[$i]) . '=' . $parameters[$i];
+                } else {
+                    $url .= '&' . key($parameters[$i]) . '=' . $parameters[$i];
+                }
             }
         }
 
         return $url;
-    }
-
-    public static function build(string $action, ?array $parameters = null): string
-    {
-        $instance = self::getInstance();
-        $url = $instance->rewrite
-            ? $instance->buildWithRewrite($action, $parameters)
-            : $instance->buildWithoutRewrite($action, $parameters);
-
-        return $instance->config->getWebsiteUrl() . $url;
     }
 }
