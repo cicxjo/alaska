@@ -113,6 +113,35 @@ class Administration extends AbstractController
         }
     }
 
+    public function showArticle(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $article = $this->articleManager->getById((int) $id);
+
+                if ($article) {
+                    $render = new Render('Page', 'AdminShowArticle');
+                    $render->process([
+                        'article' => $article,
+                        'url' => $this->config->getWebsiteUrl(),
+                        'domain' => $this->config->getWebsiteDomain(),
+                    ]);
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                    return;
+                }
+            } else {
+                throw new HTTPException(405);
+                return;
+            }
+        }
+    }
+
     public function updateArticle(?array $parameters): void
     {
         $id = $parameters['id'] ?? null;
