@@ -24,7 +24,7 @@ class Comment extends AbstractController
         $this->articleManager = new ArticleManager();
     }
 
-    private function isValidName(string $name)
+    private function isValidName(string $name): bool
     {
         if (strlen($name) <= 60) {
             return true;
@@ -33,7 +33,7 @@ class Comment extends AbstractController
         return false;
     }
 
-    private function isValidEmail(string $email)
+    private function isValidEmail(string $email): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
@@ -42,7 +42,7 @@ class Comment extends AbstractController
         return false;
     }
 
-    private function isValidContent(string $content)
+    private function isValidContent(string $content): bool
     {
         if (strlen($content) <= 1500) {
             return true;
@@ -51,7 +51,7 @@ class Comment extends AbstractController
         return false;
     }
 
-    public function addComment(?array $parameters)
+    public function addComment(?array $parameters): void
     {
         $fkArticleId = $parameters['id'];
 
