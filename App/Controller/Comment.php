@@ -128,6 +128,8 @@ class Comment extends AbstractController
                     $this->commentManager->updateReport($id, true);
                     header('Location: ' . $this->url->build('article', $comment->getFkArticleId()) . '#commentaires');
                     return;
+                } else {
+                    throw new HTTPException(404);
                 }
             } else {
                 throw new HTTPException(405);
