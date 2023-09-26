@@ -25,7 +25,7 @@
         <article class="mt-5 mb-5"><?= $article->getContent() ?></article>
 
         <footer class="pt-3">
-            <div>
+            <div id="commentaires">
                 <?php if ($article->getComments()) : ?>
                     <?php foreach ($article->getComments() as $comment) : ?>
                         <?php if (!$comment->getIsFlagged()) : ?>
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
-                                    <a href="<?= $url ?>/signaler/<?= $comment->getId() ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
+                                    <a href="<?= \App\Model\Url::build('signaler', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
                                 </div>
                             </div>
                         <?php endif ?>
