@@ -64,15 +64,15 @@
                     <?php endif ?>
                     <div class="form-group mb-3">
                         <label for="comment_name">Nom ou pseudonyme</label>
-                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="<?= $_GET['comment_name'] ?? null ?>">
+                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="<?= isset($_GET['comment_name']) && !empty($_GET['comment_name']) ? htmlspecialchars($_GET['comment_name']) : null ?>">
                     </div>
                     <div class="form-group mb-3">
                         <label for="comment_email">Adresse email</label>
-                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="<?= $_GET['comment_email'] ?? null ?>">
+                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="<?= isset($_GET['comment_email']) && !empty($_GET['comment_email']) ? htmlspecialchars($_GET['comment_email']) : null ?>">
                     </div>
                     <div class="form-group mb-3">
                     <label for="comment_content">Commentaire</label>
-                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5"><?= $_GET['comment_content'] ?? null ?></textarea>
+                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5"><?= isset($_GET['comment_content']) && !empty($_GET['comment_content']) ? htmlspecialchars($_GET['comment_content']) : null ?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Commenter</button>
                 </form>
