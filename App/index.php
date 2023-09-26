@@ -10,6 +10,7 @@ $router = new App\Model\Router();
 $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
        ->addRoute('/article', ['App\Controller\Article', 'showArticle'])
        ->addRoute('/commenter', ['App\Controller\Comment', 'addComment'])
+       ->addRoute('/signaler', ['App\Controller\Comment', 'reportComment'])
        ->addRoute('/admin', ['App\Controller\Administration', 'showPanel'])
        ->addRoute('/admin/ajouter/article', ['App\Controller\Administration', 'addArticle'])
        ->addRoute('/admin/supprimer/article', ['App\Controller\Administration', 'deleteArticle'])

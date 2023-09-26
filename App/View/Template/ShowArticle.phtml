@@ -25,10 +25,23 @@
         <article class="mt-5 mb-5"><?= $article->getContent() ?></article>
 
         <footer class="pt-3">
-            <div>
+            <div id="commentaires">
                 <?php if ($article->getComments()) : ?>
                     <?php foreach ($article->getComments() as $comment) : ?>
-                        <?php if (!$comment->getIsFlagged()) : ?>
+                        <?php if ($comment->getIsFlagged()) : ?>
+                            <div class="card bg-light-subtle mb-3">
+                                <div class="card-header">
+                                    <b>[Caché]</b>
+                                    <br>
+                                    <small>
+                                        <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                    </small>
+                                </div>
+                                <div class="card-body">
+                                    <p class="cart-text"><b>Commentaire signalé, en attente d’approbation.</b></p>
+                                </div>
+                            </div>
+                        <?php else : ?>
                             <div class="card bg-light-subtle mb-3">
                                 <div class="card-header">
                                     <b><?= htmlspecialchars($comment->getName()) ?></b>
@@ -39,7 +52,7 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
-                                    <a href="<?= $url ?>/signaler/<?= $comment->getId() ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
+                                    <a href="<?= \App\Model\Url::build('signaler', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
                                 </div>
                             </div>
                         <?php endif ?>

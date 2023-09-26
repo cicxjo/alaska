@@ -113,4 +113,28 @@ class Comment extends AbstractController
             }
         }
     }
+
+    public function reportComment(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $comment = $this->commentManager->getById($id);
+
+                if (!$comment->getIsFlagged()) {
+                    $this->commentManager->updateReport($id, true);
+                    header('Location: ' . $this->url->build('article', $comment->getFkArticleId()) . '#commentaires');
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                }
+            } else {
+                throw new HTTPException(405);
+                return;
+            }
+        }
+    }
 }
