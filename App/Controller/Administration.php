@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Model\Entity\Article as ArticleEntity;
 use App\Model\Exception\HTTPException;
 use App\Model\Manager\Article as ArticleManager;
+use App\Model\Manager\Comment as CommentManager;
 use App\Model\Manager\User as UserManager;
 use App\Model\Render;
 
@@ -14,6 +15,7 @@ class Administration extends AbstractController
 {
     private ArticleManager $articleManager;
     private UserManager $userManager;
+    private CommentManager $commentManager;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class Administration extends AbstractController
 
         $this->articleManager = new ArticleManager();
         $this->userManager = new UserManager();
+        $this->commentManager = new CommentManager();
     }
 
     public function authenticate(): bool
@@ -169,6 +172,30 @@ class Administration extends AbstractController
                 header('Location: ' . $this->url->build('admin'));
             } else {
                 throw new HTTPException(404);
+                return;
+            }
+        }
+    }
+
+    public function deleteComment(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $comment = $this->commentManager->getById($id);
+
+                if ($comment) {
+                    $this->commentManager->delete($id);
+                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                }
+            } else {
+                throw new HTTPException(405);
                 return;
             }
         }

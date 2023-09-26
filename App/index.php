@@ -14,7 +14,9 @@ $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
        ->addRoute('/admin', ['App\Controller\Administration', 'showPanel'])
        ->addRoute('/admin/ajouter/article', ['App\Controller\Administration', 'addArticle'])
        ->addRoute('/admin/supprimer/article', ['App\Controller\Administration', 'deleteArticle'])
-       ->addRoute('/admin/modifier/article', ['App\Controller\Administration', 'updateArticle']);
+       ->addRoute('/admin/modifier/article', ['App\Controller\Administration', 'updateArticle'])
+       ->addRoute('/admin/supprimer/commentaire', ['App\Controller\Administration', 'deleteComment'])
+       ;
 
 try {
     $router->run();

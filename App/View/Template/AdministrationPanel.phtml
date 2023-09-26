@@ -28,7 +28,7 @@ if ($articles) {
             <a class="btn btn-primary" href="<?= \App\Model\Url::build('admin/ajouter/article') ?>">Ajouter un article</a>
         </div>
 
-        <div class="mt-5">
+        <div id="commentaires" class="mt-5">
             <h2 class="mb-4">Commentaires signalés</h2>
 
             <?php if (count($flaggedComments) === 1) : ?>
@@ -48,7 +48,7 @@ if ($articles) {
                 <div class="card-body">
                     <p><?= htmlspecialchars($comment->getContent()) ?></p>
                     <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('approuver/commentaire', $comment->getId()) ?>">Approuver</a>
-                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('supprimer/commentaire', $comment->getId()) ?>">Supprimer</a>
+                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('admin/supprimer/commentaire', $comment->getId()) ?>">Supprimer</a>
                     <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('/article/', $comment->getFkArticleId()) ?>">Voir l’article</a>
                 </div>
             </div>
