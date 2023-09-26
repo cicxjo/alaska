@@ -24,6 +24,11 @@ class Comment extends AbstractController
         $this->articleManager = new ArticleManager();
     }
 
+    private function isValidEmail(string $email): bool
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) ? true : false;
+    }
+
     public function addComment(?array $parameters)
     {
         $fkArticleId = $parameters['id'];
@@ -37,7 +42,9 @@ class Comment extends AbstractController
                     return;
                 }
 
-                if ($_POST['comment_name'] && $_POST['comment_email'] && $_POST['comment_content']) {
+                if ($_POST['comment_name'] &&
+                    $this->isValidEmail($_POST['comment_email'])
+                    && $_POST['comment_content']) {
                     $comment = new CommentEntity();
                     $comment->setFkArticleId($fkArticleId)
                             ->setName($_POST['comment_name'])
@@ -57,6 +64,10 @@ class Comment extends AbstractController
                 empty($_POST['comment_email'])
                     ? $getParameters['comment_email'] = null
                     : $getParameters['comment_email'] = $_POST['comment_email'];
+
+                $this->isValidEmail($_POST['comment_email'])
+                    ? $getParameters['comment_email_valid'] = 1
+                    : $getParameters['comment_email_valid'] = 0;
 
                 empty($_POST['comment_content'])
                     ? $getParameters['comment_content'] = null

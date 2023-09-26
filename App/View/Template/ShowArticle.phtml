@@ -53,7 +53,7 @@
                     <?php if (isset($_GET['comment_name']) && empty($_GET['comment_name'])) : ?>
                         <div class="alert alert-danger">Renseignez votre nom ou un pseudo !</div>
                     <?php endif ?>
-                    <?php if (isset($_GET['comment_email']) && empty($_GET['comment_email'])) : ?>
+                    <?php if (isset($_GET['comment_email']) && empty($_GET['comment_email']) || isset($_GET['comment_email_valid']) && !$_GET['comment_email_valid']) : ?>
                         <div class="alert alert-danger">Renseignez une adresse email valide !</div>
                     <?php endif ?>
                     <?php if (isset($_GET['comment_content']) && empty($_GET['comment_content'])) : ?>
