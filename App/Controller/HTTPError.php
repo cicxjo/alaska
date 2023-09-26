@@ -9,7 +9,10 @@ use App\Model\Render;
 class HTTPError extends AbstractController
 {
     private int $code;
-    private array $httpStatus = [404 => 'Ressource introuvable'];
+    private array $httpStatus = [
+        404 => 'Ressource introuvable',
+        405 => 'Méthode de requête non autorisée',
+    ];
 
     public function __construct(int $code)
     {

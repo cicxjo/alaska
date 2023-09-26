@@ -25,25 +25,61 @@
         <article class="mt-5 mb-5"><?= $article->getContent() ?></article>
 
         <footer class="pt-3">
-            <?php if ($article->getComments()) : ?>
-                <?php foreach ($article->getComments() as $comment) : ?>
-                    <?php if (!$comment->getIsFlagged()) : ?>
-                        <div class="card bg-light-subtle mb-3">
-                            <div class="card-header">
-                                <b><?= htmlspecialchars($comment->getName()) ?></b>
-                                <br>
-                                <small>
-                                    <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
-                                </small>
+            <div>
+                <?php if ($article->getComments()) : ?>
+                    <?php foreach ($article->getComments() as $comment) : ?>
+                        <?php if (!$comment->getIsFlagged()) : ?>
+                            <div class="card bg-light-subtle mb-3">
+                                <div class="card-header">
+                                    <b><?= htmlspecialchars($comment->getName()) ?></b>
+                                    <br>
+                                    <small>
+                                        <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                    </small>
+                                </div>
+                                <div class="card-body">
+                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <a href="<?= $url ?>/signaler/<?= $comment->getId() ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
-                                <a href="<?= $url ?>/signaler/<?= $comment->getId() ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
-                            </div>
-                        </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </div>
+
+            <div class="card bg-light-subtle border border-primary">
+                <div id="commenter" class="card-header bg-light"><span class="h5">Commenter</span></div>
+                <form class="card-body" action="<?= \App\Model\Url::build('commenter', $article->getId()) ?>" method="post">
+                    <?php if (isset($_GET['comment_name_empty']) && $_GET['comment_name_empty']) : ?>
+                        <div class="alert alert-danger">Le nom ou pseudo est vide !</div>
+                    <?php elseif (isset($_GET['comment_name_invalid']) && $_GET['comment_name_invalid']) : ?>
+                        <div class="alert alert-danger">Le nom ou pseudo est trop long !</div>
                     <?php endif ?>
-                <?php endforeach ?>
-            <?php endif ?>
+                    <?php if (isset($_GET['comment_email_empty']) && $_GET['comment_email_empty']) : ?>
+                        <div class="alert alert-danger">L’adresse email est vide !</div>
+                    <?php elseif (isset($_GET['comment_email_invalid']) && $_GET['comment_email_invalid']) : ?>
+                        <div class="alert alert-danger">L’adresse est invalide !</div>
+                    <?php endif ?>
+                    <?php if (isset($_GET['comment_content_empty']) && $_GET['comment_content_empty']) : ?>
+                        <div class="alert alert-danger">Le commentaire est vide !</div>
+                    <?php elseif (isset($_GET['comment_content_invalid']) && $_GET['comment_content_invalid']) : ?>
+                        <div class="alert alert-danger">Le commentaire est trop long !</div>
+                    <?php endif ?>
+                    <div class="form-group mb-3">
+                        <label for="comment_name">Nom ou pseudonyme</label>
+                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="comment_email">Adresse email</label>
+                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="">
+                    </div>
+                    <div class="form-group mb-3">
+                    <label for="comment_content">Commentaire <small>(1500 caractères maximum !)</small></label>
+                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Commenter</button>
+                </form>
+            </div>
         </footer>
 
 
