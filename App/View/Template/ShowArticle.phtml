@@ -48,7 +48,7 @@
             </div>
 
             <div class="card bg-light-subtle border border-primary">
-                <div class="card-header bg-light">Commenter</div>
+                <div id="commenter" class="card-header bg-light"><span class="h5">Commenter</span></div>
                 <form class="card-body" action="<?= \App\Model\Url::build('commenter', $article->getId()) ?>" method="post">
                     <?php if (isset($_GET['comment_name_empty']) && $_GET['comment_name_empty']) : ?>
                         <div class="alert alert-danger">Le nom ou pseudo est vide !</div>

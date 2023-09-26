@@ -105,7 +105,7 @@ class Comment extends AbstractController
                     $this->commentManager->create($comment);
                 }
 
-                header('Location: ' . $this->url->build('article', $fkArticleId, $parameters));
+                header('Location: ' . $this->url->build('article', $fkArticleId, $parameters) . '#commenter');
                 return;
             } else {
                 throw new HTTPException(405);
