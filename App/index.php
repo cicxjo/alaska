@@ -16,7 +16,7 @@ $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
        ->addRoute('/admin/supprimer/article', ['App\Controller\Administration', 'deleteArticle'])
        ->addRoute('/admin/modifier/article', ['App\Controller\Administration', 'updateArticle'])
        ->addRoute('/admin/supprimer/commentaire', ['App\Controller\Administration', 'deleteComment'])
-       ;
+       ->addRoute('/admin/approuver/commentaire', ['App\Controller\Administration', 'approveComment']);
 
 try {
     $router->run();

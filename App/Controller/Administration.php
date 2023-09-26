@@ -200,4 +200,28 @@ class Administration extends AbstractController
             }
         }
     }
+
+    public function approveComment(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $comment = $this->commentManager->getById($id);
+
+                if ($comment->getIsFlagged()) {
+                    $this->commentManager->updateReport($id, false);
+                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                }
+            } else {
+                throw new HTTPException(405);
+                return;
+            }
+        }
+    }
 }

@@ -47,7 +47,7 @@ if ($articles) {
                 </div>
                 <div class="card-body">
                     <p><?= htmlspecialchars($comment->getContent()) ?></p>
-                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('approuver/commentaire', $comment->getId()) ?>">Approuver</a>
+                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('admin/approuver/commentaire', $comment->getId()) ?>">Approuver</a>
                     <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('admin/supprimer/commentaire', $comment->getId()) ?>">Supprimer</a>
                     <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('/article/', $comment->getFkArticleId()) ?>">Voir l’article</a>
                 </div>
