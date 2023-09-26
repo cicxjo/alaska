@@ -14,13 +14,13 @@
 
         <form action="" method="post">
             <?php if (isset($article)) : ?>
-                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= $article->getTitle() ?>">
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= $article->getTitle() ?>" required>
             <?php elseif (isset($form['article_title']) && $form['article_title']) : ?>
-                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= $form['article_title'] ?>">
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= $form['article_title'] ?>" required>
             <?php else : ?>
-                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre">
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" required>
             <?php endif ?>
-            <textarea name="article_content" id="tinymce" placeholder="Article">
+            <textarea name="article_content" id="tinymce" placeholder="Article" required>
                 <?php
                 if (isset($article)) {
                     echo $article->getContent();
