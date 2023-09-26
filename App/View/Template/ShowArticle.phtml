@@ -50,29 +50,32 @@
             <div class="card bg-light-subtle border border-primary">
                 <div class="card-header bg-light">Commenter</div>
                 <form class="card-body" action="<?= \App\Model\Url::build('commenter', $article->getId()) ?>" method="post">
-                    <?php if (isset($_GET['comment_name']) && empty($_GET['comment_name'])) : ?>
-                        <div class="alert alert-danger">Renseignez votre nom ou un pseudo !</div>
-                    <?php endif ?>
-                    <?php if (isset($_GET['comment_name_valid']) && !$_GET['comment_name_valid']) : ?>
+                    <?php if (isset($_GET['comment_name_empty']) && $_GET['comment_name_empty']) : ?>
+                        <div class="alert alert-danger">Le nom ou pseudo est vide !</div>
+                    <?php elseif (isset($_GET['comment_name_invalid']) && $_GET['comment_name_invalid']) : ?>
                         <div class="alert alert-danger">Le nom ou pseudo est trop long !</div>
                     <?php endif ?>
-                    <?php if (isset($_GET['comment_email']) && empty($_GET['comment_email']) || isset($_GET['comment_email_valid']) && !$_GET['comment_email_valid']) : ?>
-                        <div class="alert alert-danger">Renseignez une adresse email valide !</div>
+                    <?php if (isset($_GET['comment_email_empty']) && $_GET['comment_email_empty']) : ?>
+                        <div class="alert alert-danger">L’adresse email est vide !</div>
+                    <?php elseif (isset($_GET['comment_email_invalid']) && $_GET['comment_email_invalid']) : ?>
+                        <div class="alert alert-danger">L’adresse est invalide !</div>
                     <?php endif ?>
-                    <?php if (isset($_GET['comment_content']) && empty($_GET['comment_content'])) : ?>
+                    <?php if (isset($_GET['comment_content_empty']) && $_GET['comment_content_empty']) : ?>
                         <div class="alert alert-danger">Le commentaire est vide !</div>
+                    <?php elseif (isset($_GET['comment_content_invalid']) && $_GET['comment_content_invalid']) : ?>
+                        <div class="alert alert-danger">Le commentaire est trop long !</div>
                     <?php endif ?>
                     <div class="form-group mb-3">
                         <label for="comment_name">Nom ou pseudonyme</label>
-                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="<?= isset($_GET['comment_name']) && !empty($_GET['comment_name']) ? htmlspecialchars($_GET['comment_name']) : null ?>">
+                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="">
                     </div>
                     <div class="form-group mb-3">
                         <label for="comment_email">Adresse email</label>
-                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="<?= isset($_GET['comment_email']) && !empty($_GET['comment_email']) ? htmlspecialchars($_GET['comment_email']) : null ?>">
+                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="">
                     </div>
                     <div class="form-group mb-3">
-                    <label for="comment_content">Commentaire</label>
-                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5"><?= isset($_GET['comment_content']) && !empty($_GET['comment_content']) ? htmlspecialchars($_GET['comment_content']) : null ?></textarea>
+                    <label for="comment_content">Commentaire <small>(1500 caractères maximum !)</small></label>
+                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Commenter</button>
                 </form>

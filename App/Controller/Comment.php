@@ -24,14 +24,31 @@ class Comment extends AbstractController
         $this->articleManager = new ArticleManager();
     }
 
-    private function isNameValid(string $name) : bool
+    private function isValidName(string $name)
     {
-        return strlen($name) <= 60;
+        if (strlen($name) <= 60) {
+            return true;
+        }
+
+        return false;
     }
 
-    private function isValidEmail(string $email): bool
+    private function isValidEmail(string $email)
     {
-        return filter_var($email, FILTER_VALIDATE_EMAIL) ? true : false;
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isValidContent(string $content)
+    {
+        if (strlen($content) <= 1500) {
+            return true;
+        }
+
+        return false;
     }
 
     public function addComment(?array $parameters)
@@ -47,42 +64,48 @@ class Comment extends AbstractController
                     return;
                 }
 
-                if ($this->isNameValid($_POST['comment_name'])
-                    && $this->isValidEmail($_POST['comment_email'])
-                    && $_POST['comment_content']) {
+                $parameters = [];
+
+                if (isset($_POST['comment_name'])
+                    && !empty($_POST['comment_name']
+                    && !ctype_space($_POST['comment_name']))) {
+                    if (!$this->isValidName($_POST['comment_name'])) {
+                        $parameters['comment_name_invalid'] = '1';
+                    }
+                } else {
+                    $parameters['comment_name_empty'] = '1';
+                }
+
+                if (isset($_POST['comment_email'])
+                    && !empty($_POST['comment_email']
+                    && !ctype_space($_POST['comment_email']))) {
+                    if (!$this->isValidEmail($_POST['comment_email'])) {
+                        $parameters['comment_email_invalid'] = '1';
+                    }
+                } else {
+                    $parameters['comment_email_empty'] = '1';
+                }
+
+                if (isset($_POST['comment_content'])
+                    && !empty($_POST['comment_content']
+                    && !ctype_space($_POST['comment_content']))) {
+                    if (!$this->isValidContent($_POST['comment_content'])) {
+                        $parameters['comment_content_invalid'] = '1';
+                    }
+                } else {
+                    $parameters['comment_content_empty'] = '1';
+                }
+
+                if (empty($parameters)) {
                     $comment = new CommentEntity();
                     $comment->setFkArticleId($fkArticleId)
                             ->setName($_POST['comment_name'])
                             ->setEmail($_POST['comment_email'])
                             ->setContent($_POST['comment_content']);
                     $this->commentManager->create($comment);
-                    header('Location: ' . $this->url->build('article', $fkArticleId));
-                    return;
                 }
 
-                $getParameters = [];
-
-                empty($_POST['comment_name'])
-                    ? $getParameters['comment_name'] = null
-                    : $getParameters['comment_name'] = $_POST['comment_name'];
-
-                $this->isNameValid($_POST['comment_name'])
-                    ? $getParameters['comment_name_valid'] = 1
-                    : $getParameters['comment_name_valid'] = 0;
-
-                empty($_POST['comment_email'])
-                    ? $getParameters['comment_email'] = null
-                    : $getParameters['comment_email'] = $_POST['comment_email'];
-
-                $this->isValidEmail($_POST['comment_email'])
-                    ? $getParameters['comment_email_valid'] = 1
-                    : $getParameters['comment_email_valid'] = 0;
-
-                empty($_POST['comment_content'])
-                    ? $getParameters['comment_content'] = null
-                    : $getParameters['comment_content'] = $_POST['comment_content'];
-
-                header('Location: ' . $this->url->build('article', $fkArticleId, $getParameters));
+                header('Location: ' . $this->url->build('article', $fkArticleId, $parameters));
                 return;
             } else {
                 throw new HTTPException(405);
