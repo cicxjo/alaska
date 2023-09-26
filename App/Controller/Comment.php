@@ -31,42 +31,42 @@ class Comment extends AbstractController
         if ($this->isValidId($fkArticleId)) {
             $fkArticleId = (int) $fkArticleId;
 
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!$this->articleManager->getById($fkArticleId)) {
                     throw new HTTPError(404);
                     return;
                 }
 
-                if ($_GET['comment_name'] && $_GET['comment_email'] && $_GET['comment_content']) {
+                if ($_POST['comment_name'] && $_POST['comment_email'] && $_POST['comment_content']) {
                     $comment = new CommentEntity();
                     $comment->setFkArticleId($fkArticleId)
-                            ->setName($_GET['comment_name'])
-                            ->setEmail($_GET['comment_email'])
-                            ->setContent($_GET['comment_content']);
+                            ->setName($_POST['comment_name'])
+                            ->setEmail($_POST['comment_email'])
+                            ->setContent($_POST['comment_content']);
                     $this->commentManager->create($comment);
                     header('Location: ' . $this->url->build('article', $fkArticleId));
                     return;
                 }
 
-                unset($parameters['id'], $parameters['action']);
+                $getParameters = [];
 
-                if (empty($_GET['comment_name'])) {
-                    unset($parameters['comment_name']);
-                }
+                empty($_POST['comment_name'])
+                    ? $getParameters['comment_name'] = null
+                    : $getParameters['comment_name'] = $_POST['comment_name'];
 
-                if (empty($_GET['comment_email'])) {
-                    unset($parameters['comment_email']);
-                }
+                empty($_POST['comment_email'])
+                    ? $getParameters['comment_email'] = null
+                    : $getParameters['comment_email'] = $_POST['comment_email'];
 
-                if (empty($_GET['comment_content'])) {
-                    unset($parameters['comment_content']);
-                }
+                empty($_POST['comment_content'])
+                    ? $getParameters['comment_content'] = null
+                    : $getParameters['comment_content'] = $_POST['comment_content'];
 
-                header('Location: ' . $this->url->build('article', $fkArticleId, $parameters));
+                header('Location: ' . $this->url->build('article', $fkArticleId, $getParameters));
                 return;
             } else {
                 throw new HTTPException(405);
-                exit;
+                return;
             }
         }
     }

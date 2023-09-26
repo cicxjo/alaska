@@ -49,14 +49,14 @@
 
             <div class="card bg-light-subtle border border-primary">
                 <div class="card-header bg-light">Commenter</div>
-                <form class="card-body" action="<?= \App\Model\Url::build('commenter', $article->getId()) ?>" method="get">
-                    <?php if (!isset($_GET['comment_name'])) : ?>
+                <form class="card-body" action="<?= \App\Model\Url::build('commenter', $article->getId()) ?>" method="post">
+                    <?php if (isset($_GET['comment_name']) && empty($_GET['comment_name'])) : ?>
                         <div class="alert alert-danger">Renseignez votre nom ou un pseudo !</div>
                     <?php endif ?>
-                    <?php if (!isset($_GET['comment_email'])) : ?>
-                        <div class="alert alert-danger">Renseignez une adresse email !</div>
+                    <?php if (isset($_GET['comment_email']) && empty($_GET['comment_email'])) : ?>
+                        <div class="alert alert-danger">Renseignez une adresse email valide !</div>
                     <?php endif ?>
-                    <?php if (!isset($_GET['comment_content'])) : ?>
+                    <?php if (isset($_GET['comment_content']) && empty($_GET['comment_content'])) : ?>
                         <div class="alert alert-danger">Le commentaire est vide !</div>
                     <?php endif ?>
                     <div class="form-group mb-3">
