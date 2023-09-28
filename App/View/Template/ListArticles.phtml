@@ -13,7 +13,7 @@
             <?php foreach ($articles as $article) : ?>
                 <div class="mt-5">
                     <p>
-                        <span class="h5"><?= $article->getTitle() ?></span>
+                        <span class="h5"><?= htmlspecialchars($article->getTitle()) ?></span>
                         <br>
                         <small>
                             <time datetime="<?= $article->getInsertedAt(true)->format('Y-m-d') ?>">
