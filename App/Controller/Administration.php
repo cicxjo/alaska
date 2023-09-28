@@ -212,13 +212,20 @@ class Administration extends AbstractController
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
+            $action = $parameters['action'];
 
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $comment = $this->commentManager->getById($id);
 
                 if ($comment) {
+                    if ($action === 'admin/voir/article/supprimer/commentaire') {
+                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                    } else {
+                        $url = $this->url->build('admin');
+                    }
+                    $url .= '#commentaires';
                     $this->commentManager->delete($id);
-                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    header('Location: ' . $url);
                     return;
                 } else {
                     throw new HTTPException(404);
