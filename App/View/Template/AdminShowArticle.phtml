@@ -24,7 +24,7 @@
 
         <div class="mt-5">
             <a class="btn btn-primary" href="<?= \App\Model\Url::build('admin/voir/article/modifier/article', $article->getId()) ?>">Modifier l’article</a>
-            <a class="btn btn-danger" href="<?= \App\Model\Url::build('admin/voir/article/supprimer/article', $article->getId()) ?>">Supprimer l’article</a>
+            <a class="btn btn-danger" href="<?= \App\Model\Url::build('admin/supprimer/article', $article->getId()) ?>">Supprimer l’article</a>
         </div>
 
         <article id="article" class="mt-5 mb-5"><?= $article->getContent() ?></article>
