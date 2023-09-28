@@ -60,7 +60,7 @@ class Comment extends AbstractController
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!$this->articleManager->getById($fkArticleId)) {
-                    throw new HTTPError(404);
+                    throw new HTTPException(404);
                     return;
                 }
 
