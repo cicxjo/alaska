@@ -51,7 +51,7 @@
                                     </small>
                                 </div>
                                 <div class="card-body">
-                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <p class="cart-text"><?= nl2br(htmlspecialchars($comment->getContent())) ?></p>
                                     <a href="<?= \App\Model\Url::build('signaler', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
                                 </div>
                             </div>
