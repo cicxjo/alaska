@@ -124,8 +124,14 @@ class Comment extends AbstractController
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $comment = $this->commentManager->getById($id);
 
-                if (!$comment->getIsFlagged()) {
-                    $this->commentManager->updateReport($id, true);
+                if ($comment) {
+                    if (!$comment->getIsFlagged()) {
+                        $this->commentManager->updateReport($id, true);
+                    } else {
+                        throw new HTTPException(404);
+                        return;
+                    }
+
                     header('Location: ' . $this->url->build('article', $comment->getFkArticleId()) . '#commentaires');
                     return;
                 } else {
