@@ -12,11 +12,15 @@ $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
        ->addRoute('/commenter', ['App\Controller\Comment', 'addComment'])
        ->addRoute('/signaler', ['App\Controller\Comment', 'reportComment'])
        ->addRoute('/admin', ['App\Controller\Administration', 'showPanel'])
+       ->addRoute('/admin/voir/article', ['App\Controller\Administration', 'showArticle'])
        ->addRoute('/admin/ajouter/article', ['App\Controller\Administration', 'addArticle'])
        ->addRoute('/admin/supprimer/article', ['App\Controller\Administration', 'deleteArticle'])
        ->addRoute('/admin/modifier/article', ['App\Controller\Administration', 'updateArticle'])
        ->addRoute('/admin/supprimer/commentaire', ['App\Controller\Administration', 'deleteComment'])
-       ->addRoute('/admin/approuver/commentaire', ['App\Controller\Administration', 'approveComment']);
+       ->addRoute('/admin/approuver/commentaire', ['App\Controller\Administration', 'approveComment'])
+       ->addRoute('/admin/voir/article/supprimer/commentaire', ['App\Controller\Administration', 'deleteComment'])
+       ->addRoute('/admin/voir/article/signaler/commentaire', ['App\Controller\Administration', 'reportComment'])
+       ->addRoute('/admin/voir/article/approuver/commentaire', ['App\Controller\Administration', 'approveComment']);
 
 try {
     $router->run();

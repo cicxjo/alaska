@@ -113,6 +113,35 @@ class Administration extends AbstractController
         }
     }
 
+    public function showArticle(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $article = $this->articleManager->getById((int) $id);
+
+                if ($article) {
+                    $render = new Render('Page', 'AdminShowArticle');
+                    $render->process([
+                        'article' => $article,
+                        'url' => $this->config->getWebsiteUrl(),
+                        'domain' => $this->config->getWebsiteDomain(),
+                    ]);
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                    return;
+                }
+            } else {
+                throw new HTTPException(405);
+                return;
+            }
+        }
+    }
+
     public function updateArticle(?array $parameters): void
     {
         $id = $parameters['id'] ?? null;
@@ -183,13 +212,20 @@ class Administration extends AbstractController
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
+            $action = $parameters['action'];
 
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $comment = $this->commentManager->getById($id);
 
                 if ($comment) {
+                    if ($action === 'admin/voir/article/supprimer/commentaire') {
+                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                    } else {
+                        $url = $this->url->build('admin');
+                    }
+                    $url .= '#commentaires';
                     $this->commentManager->delete($id);
-                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    header('Location: ' . $url);
                     return;
                 } else {
                     throw new HTTPException(404);
@@ -204,6 +240,7 @@ class Administration extends AbstractController
     public function approveComment(?array $parameters): void
     {
         $id = $parameters['id'];
+        $action = $parameters['action'];
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
@@ -213,7 +250,40 @@ class Administration extends AbstractController
 
                 if ($comment->getIsFlagged()) {
                     $this->commentManager->updateReport($id, false);
-                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    if ($action === 'admin/voir/article/approuver/commentaire') {
+                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                        $url .= '#commentaire-' . $comment->getId();
+                    } else {
+                        $url = $this->url->build('admin');
+                        $url .= '#commentaires';
+                    }
+                    header('Location: ' . $url);
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                }
+            } else {
+                throw new HTTPException(405);
+                return;
+            }
+        }
+    }
+
+    public function reportComment(?array $parameters): void
+    {
+        $id = $parameters['id'];
+
+        if ($this->authenticate() && $this->isValidId($id)) {
+            $id = (int) $id;
+
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $comment = $this->commentManager->getById($id);
+
+                if (!$comment->getIsFlagged()) {
+                    $this->commentManager->updateReport($id, true);
+                    $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                    $url .= '#commentaires';
+                    header('Location: ' . $url);
                     return;
                 } else {
                     throw new HTTPException(404);

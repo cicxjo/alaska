@@ -1,0 +1,79 @@
+<?php include_once(__DIR__ . '/../Partials/head.phtml'); ?>
+
+<body>
+
+    <?php include_once(__DIR__ . '/../Partials/header.phtml'); ?>
+
+    <main class="container mt-5 mb-5">
+        <header>
+            <h1><?= $article->getTitle() ?></h1>
+            <p>
+                <small>
+                    <?php if ($article->getModifiedAt(true) > $article->getInsertedAt(true)) : ?>
+                        <div>
+                            Modifié le <time datetime="<?= $article->getModifiedAt(true)->format('Y-m-d') ?>"><?= $article->getModifiedAt(true)->format('d/m/Y') ?></time>
+                        </div>
+                    <?php else : ?>
+                        <div>
+                            Ajouté le <time datetime="<?= $article->getInsertedAt(true)->format('Y-m-d') ?>"><?= $article->getInsertedAt(true)->format('d/m/Y') ?></time>
+                        </div>
+                    <?php endif ?>
+                </small>
+            </p>
+        </header>
+
+        <div class="mt-5">
+            <a class="btn btn-primary" href="<?= \App\Model\Url::build('admin/voir/article/modifier/article', $article->getId()) ?>">Modifier l’article</a>
+            <a class="btn btn-danger" href="<?= \App\Model\Url::build('admin/voir/article/supprimer/article', $article->getId()) ?>">Supprimer l’article</a>
+        </div>
+
+        <article id="article" class="mt-5 mb-5"><?= $article->getContent() ?></article>
+
+        <footer class="pt-3">
+            <div id="commentaires">
+                <?php if ($article->getComments()) : ?>
+                    <?php foreach ($article->getComments() as $comment) : ?>
+                        <?php if ($comment->getIsFlagged()) : ?>
+                            <div id="commentaire-<?= $comment->getId() ?>" class="card bg-light-subtle border border-danger mb-3">
+                                <div class="card-header">
+                                    <b><?= htmlspecialchars($comment->getName()) ?></b>
+                                    <br>
+                                    <small>
+                                        <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                    </small>
+                                </div>
+                                <div class="card-body">
+                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <a href="<?= \App\Model\Url::build('admin/voir/article/approuver/commentaire', $comment->getId()) ?>" class="btn btn-outline-success btn-sm">Approuver</a>
+                                    <a href="<?= \App\Model\Url::build('admin/voir/article/supprimer/commentaire', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Supprimer</a>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <div id="commentaire-<?= $comment->getId() ?>" class="card bg-light-subtle mb-3">
+                                <div class="card-header">
+                                    <b><?= htmlspecialchars($comment->getName()) ?></b>
+                                    <br>
+                                    <small>
+                                        <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                    </small>
+                                </div>
+                                <div class="card-body">
+                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <a href="<?= \App\Model\Url::build('admin/voir/article/signaler/commentaire', $comment->getId()) ?>" class="btn btn-outline-dark btn-sm">Signaler</a>
+                                    <a href="<?= \App\Model\Url::build('admin/voir/article/supprimer/commentaire', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Supprimer</a>
+                                </div>
+                            </div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                <?php endif ?>
+            </div>
+        </footer>
+
+
+    </main>
+
+    <?php include_once(__DIR__ . '/../Partials/footer.phtml'); ?>
+
+    <?php include_once(__DIR__ . '/../Partials/script.phtml'); ?>
+
+</body>
