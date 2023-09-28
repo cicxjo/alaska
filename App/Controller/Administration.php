@@ -144,7 +144,8 @@ class Administration extends AbstractController
 
     public function updateArticle(?array $parameters): void
     {
-        $id = $parameters['id'] ?? null;
+        $id = $parameters['id'];
+        $action = $parameters['action'];
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
@@ -170,7 +171,12 @@ class Administration extends AbstractController
                             ->setContent($_POST['article_content'])
                             ->setId($id);
                     $this->articleManager->update($article);
-                    header('Location: ' . $this->url->build('admin'));
+                    if ($action === 'admin/voir/article/modifier/article') {
+                        $url = $this->url->build('admin/voir/article', $article->getId());
+                    } else {
+                        $url = $this->url->build('admin');
+                    }
+                    header('Location: ' . $url);
                     return;
                 }
 
