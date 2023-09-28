@@ -40,6 +40,8 @@
                                     <br>
                                     <small>
                                         <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                        <br>
+                                        <a href="mailto:<?= htmlspecialchars($comment->getEmail()) ?>"><?= htmlspecialchars($comment->getEmail()) ?></a>
                                     </small>
                                 </div>
                                 <div class="card-body">
@@ -55,6 +57,8 @@
                                     <br>
                                     <small>
                                         <time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time>
+                                        <br>
+                                        <a href="mailto:<?= htmlspecialchars($comment->getEmail()) ?>"><?= htmlspecialchars($comment->getEmail()) ?></a>
                                     </small>
                                 </div>
                                 <div class="card-body">
