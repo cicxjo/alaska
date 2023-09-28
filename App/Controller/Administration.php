@@ -254,17 +254,23 @@ class Administration extends AbstractController
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $comment = $this->commentManager->getById($id);
 
-                if ($comment->getIsFlagged()) {
-                    $this->commentManager->updateReport($id, false);
-                    if ($action === 'admin/voir/article/approuver/commentaire') {
-                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
-                        $url .= '#commentaire-' . $comment->getId();
+                if ($comment) {
+                    if ($comment->getIsFlagged()) {
+                        $this->commentManager->updateReport($id, false);
+                        if ($action === 'admin/voir/article/approuver/commentaire') {
+                            $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                            $url .= '#commentaire-' . $comment->getId();
+                        } else {
+                            $url = $this->url->build('admin');
+                            $url .= '#commentaires';
+                        }
+
+                        header('Location: ' . $url);
+                        return;
                     } else {
-                        $url = $this->url->build('admin');
-                        $url .= '#commentaires';
+                        throw new HTTPException(404);
+                        return;
                     }
-                    header('Location: ' . $url);
-                    return;
                 } else {
                     throw new HTTPException(404);
                 }
@@ -285,12 +291,16 @@ class Administration extends AbstractController
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $comment = $this->commentManager->getById($id);
 
-                if (!$comment->getIsFlagged()) {
-                    $this->commentManager->updateReport($id, true);
-                    $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
-                    $url .= '#commentaires';
-                    header('Location: ' . $url);
-                    return;
+                if ($comment) {
+                    if (!$comment->getIsFlagged()) {
+                        $this->commentManager->updateReport($id, true);
+                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                        $url .= '#commentaires';
+                        header('Location: ' . $url);
+                        return;
+                    } else {
+                        throw new HTTPException(404);
+                    }
                 } else {
                     throw new HTTPException(404);
                 }
