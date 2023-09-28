@@ -28,4 +28,9 @@ abstract class AbstractController
             return false;
         }
     }
+
+    protected function isNotEmpty(string $string): bool
+    {
+        return !empty($string) && !ctype_space($string) ? true : false;
+    }
 }

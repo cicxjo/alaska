@@ -191,22 +191,30 @@ class Administration extends AbstractController
 
             $render = new Render('Page', 'ArticleEditor');
             $render->process($data);
+            return;
         }
     }
 
     public function deleteArticle(?array $parameters): void
     {
-        $id = $parameters['id'] ?? null;
+        $id = $parameters['id'];
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
-            $article = $this->articleManager->getById($id);
 
-            if ($article) {
-                $this->articleManager->delete($id);
-                header('Location: ' . $this->url->build('admin'));
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $article = $this->articleManager->getById($id);
+
+                if ($article) {
+                    $this->articleManager->delete($id);
+                    header('Location: ' . $this->url->build('admin'));
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                    return;
+                }
             } else {
-                throw new HTTPException(404);
+                throw new HTTPException(405);
                 return;
             }
         }
@@ -273,6 +281,7 @@ class Administration extends AbstractController
                     }
                 } else {
                     throw new HTTPException(404);
+                    return;
                 }
             } else {
                 throw new HTTPException(405);
@@ -300,9 +309,11 @@ class Administration extends AbstractController
                         return;
                     } else {
                         throw new HTTPException(404);
+                        return;
                     }
                 } else {
                     throw new HTTPException(404);
+                    return;
                 }
             } else {
                 throw new HTTPException(405);
