@@ -13,7 +13,7 @@
             <div class="form-group mb-3">
                 <label for="auth_username">Nom d’utilisateur</label>
                 <?php if (isset($form['auth_username'])) : ?>
-                    <input name="auth_username"  type="text" class="form-control" placeholder="Nom d’utilisateur" value="<?= $form['auth_username'] ?>" required>
+                    <input name="auth_username"  type="text" class="form-control" placeholder="Nom d’utilisateur" value="<?= htmlspecialchars($form['auth_username']) ?>" required>
                 <?php else : ?>
                     <input name="auth_username"  type="text" class="form-control" placeholder="Nom d’utilisateur" required>
                 <?php endif ?>
@@ -21,7 +21,7 @@
             <div class="form-group mb-3">
                 <label for="auth_password">Mote de passe</label>
                 <?php if (isset($form['auth_password'])) : ?>
-                    <input name="auth_password"  type="password" class="form-control" placeholder="Mote de passe" value="<?= $form['auth_password'] ?>" required>
+                    <input name="auth_password"  type="password" class="form-control" placeholder="Mote de passe" value="<?= htmlspecialchars($form['auth_password']) ?>" required>
                 <?php else : ?>
                     <input name="auth_password"  type="password" class="form-control" placeholder="Mote de passe" required>
                 <?php endif ?>
