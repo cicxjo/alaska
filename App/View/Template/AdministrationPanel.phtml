@@ -41,6 +41,9 @@ if ($articles) {
 
             <?php foreach ($flaggedComments as $comment) : ?>
             <div class="card mb-4">
+                <div class="card-header">
+                    <b><?= $comment->getName() ?></b>
+                </div>
                 <div class="list-group list-group-flush">
                     <small class="list-group-item"><time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time></small>
                     <small class="list-group-item"><a href="mailto:<?= htmlspecialchars($comment->getEmail()) ?>"><?= htmlspecialchars($comment->getEmail()) ?></a></small>
