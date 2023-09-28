@@ -6,7 +6,7 @@
 
     <main class="container mt-5 mb-5">
         <header>
-            <h1><?= $article->getTitle() ?></h1>
+            <h1><?= htmlspecialchars($article->getTitle()) ?></h1>
             <p>
                 <small>
                     <?php if ($article->getModifiedAt(true) > $article->getInsertedAt(true)) : ?>
@@ -45,7 +45,7 @@
                                     </small>
                                 </div>
                                 <div class="card-body">
-                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <p class="cart-text"><?= nl2br(htmlspecialchars($comment->getContent())) ?></p>
                                     <a href="<?= \App\Model\Url::build('admin/voir/article/approuver/commentaire', $comment->getId()) ?>" class="btn btn-outline-success btn-sm">Approuver</a>
                                     <a href="<?= \App\Model\Url::build('admin/voir/article/supprimer/commentaire', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Supprimer</a>
                                 </div>
@@ -62,7 +62,7 @@
                                     </small>
                                 </div>
                                 <div class="card-body">
-                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <p class="cart-text"><?= nl2br(htmlspecialchars($comment->getContent())) ?></p>
                                     <a href="<?= \App\Model\Url::build('admin/voir/article/signaler/commentaire', $comment->getId()) ?>" class="btn btn-outline-dark btn-sm">Signaler</a>
                                     <a href="<?= \App\Model\Url::build('admin/voir/article/supprimer/commentaire', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Supprimer</a>
                                 </div>

@@ -6,7 +6,7 @@
 
     <main class="container mt-5 mb-5">
         <header>
-            <h1><?= $article->getTitle() ?></h1>
+            <h1><?= htmlspecialchars($article->getTitle()) ?></h1>
             <p>
                 <small>
                     <?php if ($article->getModifiedAt(true) > $article->getInsertedAt(true)) : ?>
@@ -51,7 +51,7 @@
                                     </small>
                                 </div>
                                 <div class="card-body">
-                                    <p class="cart-text"><?= htmlspecialchars($comment->getContent()) ?></p>
+                                    <p class="cart-text"><?= nl2br(htmlspecialchars($comment->getContent())) ?></p>
                                     <a href="<?= \App\Model\Url::build('signaler', $comment->getId()) ?>" class="btn btn-outline-danger btn-sm">Signaler</a>
                                 </div>
                             </div>
