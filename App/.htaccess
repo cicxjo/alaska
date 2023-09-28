@@ -14,3 +14,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(admin)/(ajouter)/(article)/?$ index.php?action=$1/$2/$3 [QSA,L]
     RewriteRule ^(admin)/(voir|modifier|supprimer)/(article)/([0-9]+)/?$ index.php?action=$1/$2/$3&id=$4 [QSA,L]
     RewriteRule ^(admin)/(supprimer|approuver)/(commentaire)/([0-9]+)/?$ index.php?action=$1/$2/$3&id=$4 [QSA,L]
+    RewriteRule ^(admin)/(voir)/(article)/(approuver)/(commentaire)/([0-9]+)/?$ index.php?action=$1/$2/$3/$4/$5&id=$6 [QSA,L]

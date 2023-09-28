@@ -233,6 +233,7 @@ class Administration extends AbstractController
     public function approveComment(?array $parameters): void
     {
         $id = $parameters['id'];
+        $action = $parameters['action'];
 
         if ($this->authenticate() && $this->isValidId($id)) {
             $id = (int) $id;
@@ -242,7 +243,14 @@ class Administration extends AbstractController
 
                 if ($comment->getIsFlagged()) {
                     $this->commentManager->updateReport($id, false);
-                    header('Location: ' . $this->url->build('admin') . '#commentaires');
+                    if ($action === 'admin/voir/article/approuver/commentaire') {
+                        $url = $this->url->build('admin/voir/article', $comment->getFkArticleId());
+                        $url .= '#commentaire-' . $comment->getId();
+                    } else {
+                        $url = $this->url->build('admin');
+                        $url .= '#commentaires';
+                    }
+                    header('Location: ' . $url);
                     return;
                 } else {
                     throw new HTTPException(404);
