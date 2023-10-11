@@ -12,7 +12,7 @@
             <div class="alert alert-danger">Attention, l’article est vide !</div>
         <?php endif ?>
 
-        <form action="" method="post">
+        <form method="post">
             <?php if (isset($article)) : ?>
                 <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= htmlspecialchars($article->getTitle()) ?>" required>
             <?php elseif (isset($form['article_title']) && $form['article_title']) : ?>
