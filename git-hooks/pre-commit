@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	against=$(git hash-object -t tree /dev/null)
+fi
+
+exec 1>&2
+
+if test "$(git diff-index --cached --name-only --diff-filter=ACMR -z "$against"|
+	LC_ALL=C tr -d '[ -~]\0' | wc -c)" != 0
+then
+	printf "%s" "Error: Attempt to add a non-ASCII file name."
+fi
+
+git diff-index --check --cached "$against" --
+
+make lint
+
+git diff-index --cached --name-only --diff-filter=ACMR "$against" |
+	grep '\.php$' |
+		while IFS= read -r file
+		do
+			php -l "$file"
+		done
+
+ctags -R App/
+
+:

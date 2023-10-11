@@ -1,0 +1,37 @@
+<?php include_once(__DIR__ . '/../Partials/head.phtml'); ?>
+
+<body>
+
+    <?php include_once(__DIR__ . '/../Partials/header.phtml'); ?>
+
+    <main class="container mt-5 mb-5">
+        <h1><?= $title ?></h1>
+        <?php if (isset($form['auth_username']) || isset($form['auth_password'])) : ?>
+            <div class="alert alert-danger">Mauvais nom d’utilisateur ou mauvais mot de passe !</div>
+        <?php endif ?>
+        <form class="mt-5" method="post">
+            <div class="form-group mb-3">
+                <label for="auth_username">Nom d’utilisateur</label>
+                <?php if (isset($form['auth_username'])) : ?>
+                    <input id="auth_username" name="auth_username"  type="text" class="form-control" placeholder="Nom d’utilisateur" value="<?= htmlspecialchars($form['auth_username']) ?>" required>
+                <?php else : ?>
+                    <input id="auth_username" name="auth_username"  type="text" class="form-control" placeholder="Nom d’utilisateur" required>
+                <?php endif ?>
+            </div>
+            <div class="form-group mb-3">
+                <label for="auth_password">Mote de passe</label>
+                <?php if (isset($form['auth_password'])) : ?>
+                    <input id="auth_password" name="auth_password"  type="password" class="form-control" placeholder="Mote de passe" value="<?= htmlspecialchars($form['auth_password']) ?>" required>
+                <?php else : ?>
+                    <input id="auth_password" name="auth_password"  type="password" class="form-control" placeholder="Mote de passe" required>
+                <?php endif ?>
+            </div>
+            <button type="submit" class="btn btn-primary">Se connecter</button>
+        </form>
+    </main>
+
+    <?php include_once(__DIR__ . '/../Partials/footer.phtml'); ?>
+
+    <?php include_once(__DIR__ . '/../Partials/script.phtml'); ?>
+
+</body>

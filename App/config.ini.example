@@ -1,0 +1,11 @@
+[database]
+name = alaska
+username = root
+password = toor
+debug = true
+
+[website]
+url = http://alaska.invalid
+domain = alaska.invalid
+
+# vim:ft=dosini:

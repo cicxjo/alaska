@@ -1,0 +1,5 @@
+git-hooks/custom.pre-commit
+devel.mk
+composer.lock
+vendor/
+App/config.ini

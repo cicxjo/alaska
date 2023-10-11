@@ -1,0 +1,40 @@
+<?php include_once(__DIR__ . '/../Partials/head.phtml'); ?>
+
+<body>
+
+    <?php include_once(__DIR__ . '/../Partials/header.phtml'); ?>
+
+    <main class="container mt-5 mb-5">
+        <?php if (isset($form['article_title']) && !$form['article_title']) : ?>
+            <div class="alert alert-danger">Attention, le titre est vide !</div>
+        <?php endif ?>
+        <?php if (isset($form['article_content']) && !$form['article_content']) : ?>
+            <div class="alert alert-danger">Attention, l’article est vide !</div>
+        <?php endif ?>
+
+        <form method="post">
+            <?php if (isset($article)) : ?>
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= htmlspecialchars($article->getTitle()) ?>" required>
+            <?php elseif (isset($form['article_title']) && $form['article_title']) : ?>
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" value="<?= htmlspecialchars($form['article_title']) ?>" required>
+            <?php else : ?>
+                <input name="article_title" type="text" class="form-control mb-3" placeholder="Titre" required>
+            <?php endif ?>
+            <textarea name="article_content" id="tinymce" placeholder="Article" required>
+                <?php
+                if (isset($article)) {
+                    echo(htmlspecialchars($article->getContent()));
+                } elseif (isset($form['article_content']) && $form['article_content']) {
+                    echo(htmlspecialchars($form['article_content']));
+                }
+                ?>
+            </textarea>
+            <button type="submit" class="btn btn-primary mt-3">Enregister l’article</button>
+        </form>
+    </main>
+
+    <?php include_once(__DIR__ . '/../Partials/footer.phtml'); ?>
+
+    <?php include_once(__DIR__ . '/../Partials/script.phtml'); ?>
+
+</body>

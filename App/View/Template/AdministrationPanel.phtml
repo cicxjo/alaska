@@ -1,0 +1,95 @@
+<?php
+$flaggedComments = [];
+if ($articles) {
+    foreach ($articles as $article) {
+        $comments = $article->getComments();
+        if ($comments) {
+            foreach ($comments as $comment) {
+                if ($comment->getIsFlagged() > 0) {
+                    $flaggedComments[] = $comment;
+                }
+            }
+        }
+    }
+}
+?>
+<?php include_once(__DIR__ . '/../Partials/head.phtml'); ?>
+
+<body>
+
+    <?php include_once(__DIR__ . '/../Partials/header.phtml'); ?>
+
+    <main class="container mt-5 mb-5">
+        <header>
+            <h1><?= $title ?></h1>
+        </header>
+
+        <div class="mt-5">
+            <a class="btn btn-primary" href="<?= \App\Model\Url::build('admin/ajouter/article') ?>">Ajouter un article</a>
+        </div>
+
+        <div id="commentaires" class="mt-5">
+            <h2 class="mb-4">Commentaires signalés</h2>
+
+            <?php if (count($flaggedComments) === 1) : ?>
+                <div class="alert alert-danger"><?= count($flaggedComments) ?> commentaire signalé !</div>
+            <?php elseif (count($flaggedComments) > 1) : ?>
+                <div class="alert alert-danger"><?= count($flaggedComments) ?> commentaires signalés !</div>
+            <?php else : ?>
+                <div class="alert alert-secondary">Aucun commentaire signalé.</div>
+            <?php endif ?>
+
+            <?php foreach ($flaggedComments as $comment) : ?>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <b><?= htmlspecialchars($comment->getName()) ?></b>
+                </div>
+                <div class="list-group list-group-flush">
+                    <small class="list-group-item"><time datetime="<?= $comment->getInsertedAt(true)->format('Y-m-d') ?>"><?= $comment->getInsertedAt(true)->format('d/m/Y') ?></time></small>
+                    <small class="list-group-item"><a href="mailto:<?= htmlspecialchars($comment->getEmail()) ?>"><?= htmlspecialchars($comment->getEmail()) ?></a></small>
+                </div>
+                <div class="card-body">
+                    <p><?= nl2br(htmlspecialchars($comment->getContent())) ?></p>
+                    <a class="btn btn-outline-success" href="<?= \App\Model\Url::build('admin/approuver/commentaire', $comment->getId()) ?>">Approuver</a>
+                    <a class="btn btn-outline-danger" href="<?= \App\Model\Url::build('admin/supprimer/commentaire', $comment->getId()) ?>">Supprimer</a>
+                    <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('admin/voir/article', $comment->getFkArticleId()) . '#commentaire-' . $comment->getId() ?>">Voir</a>
+                    <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('admin/voir/article', $comment->getFkArticleId()) ?>">Voir l’article</a>
+                </div>
+            </div>
+            <?php endforeach ?>
+        </div>
+
+        <div class="mt-5">
+            <h2 class="mb-4">Tous les articles</h2>
+
+            <?php if ($articles) : ?>
+                <?php foreach ($articles as $article) : ?>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <b><?= htmlspecialchars($article->getTitle()) ?></b>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <small class="list-group-item">Ajouté le <time datetime="<?= $article->getInsertedAt(true)->format('Y-m-d') ?>"><?= $article->getInsertedAt(true)->format('d/m/Y') ?></time></small>
+                            <?php if ($article->getModifiedAt(true) > $article->getInsertedAt(true)) : ?>
+                            <small class="list-group-item">Modifié le <time datetime="<?= $article->getModifiedAt(true)->format('Y-m-d') ?>"><?= $article->getModifiedAt(true)->format('d/m/Y') ?></time></small>
+                            <?php endif ?>
+                        </div>
+                        <div class="card-body">
+                            <a class="btn btn-outline-primary " href="<?= \App\Model\Url::build('admin/modifier/article', $article->getId()) ?>">Modifier</a>
+                            <a class="btn btn-outline-danger " href="<?= \App\Model\Url::build('admin/supprimer/article', $article->getId()) ?>">Supprimer</a>
+                            <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('admin/voir/article', $article->getId()) ?>">Voir</a>
+                            <a class="btn btn-outline-secondary" href="<?= \App\Model\Url::build('admin/voir/article', $article->getId()) . '#commentaires' ?>">Voir les commentaires</a>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            <?php endif ?>
+
+        </div>
+
+    </main>
+
+    <?php include_once(__DIR__ . '/../Partials/footer.phtml'); ?>
+
+    <?php include_once(__DIR__ . '/../Partials/script.phtml'); ?>
+
+</body>
