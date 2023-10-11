@@ -21,7 +21,8 @@ $router->addRoute('/', ['App\Controller\Article', 'listArticles'])
        ->addRoute('/admin/voir/article/modifier/article', ['App\Controller\Administration', 'updateArticle'])
        ->addRoute('/admin/voir/article/supprimer/commentaire', ['App\Controller\Administration', 'deleteComment'])
        ->addRoute('/admin/voir/article/signaler/commentaire', ['App\Controller\Administration', 'reportComment'])
-       ->addRoute('/admin/voir/article/approuver/commentaire', ['App\Controller\Administration', 'approveComment']);
+       ->addRoute('/admin/voir/article/approuver/commentaire', ['App\Controller\Administration', 'approveComment'])
+       ->addRoute('/à-propos', ['App\Controller\About', 'goToAbout']);
 
 try {
     $router->run();

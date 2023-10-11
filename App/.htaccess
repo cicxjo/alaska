@@ -7,6 +7,7 @@ ErrorDocument 404 /?action=404
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^/?$ index.php?action=$1 [QSA,L]
+    RewriteRule ^(à-propos) index.php?action=à-propos
     RewriteRule ^(article)/([0-9]+)/?$ index.php?action=$1&id=$2 [QSA,L]
     RewriteRule ^(commenter|signaler)/([0-9]+)/?$ index.php?action=$1&id=$2 [QSA,L]
     RewriteRule ^(admin)/?$ index.php?action=$1 [QSA,L]
