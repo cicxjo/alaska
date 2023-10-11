@@ -4,25 +4,25 @@
 
     <?php include_once(__DIR__ . '/../Partials/header.phtml'); ?>
 
-    <main class="container mt-5 mb-5">
+    <article class="container mt-5 mb-5">
         <header>
             <h1><?= htmlspecialchars($article->getTitle()) ?></h1>
             <p>
                 <small>
                     <?php if ($article->getModifiedAt(true) > $article->getInsertedAt(true)) : ?>
-                        <div>
+                        <span>
                             Modifié le <time datetime="<?= $article->getModifiedAt(true)->format('Y-m-d') ?>"><?= $article->getModifiedAt(true)->format('d/m/Y') ?></time>
-                        </div>
+                        </span>
                     <?php else : ?>
-                        <div>
+                        <span>
                             Ajouté le <time datetime="<?= $article->getInsertedAt(true)->format('Y-m-d') ?>"><?= $article->getInsertedAt(true)->format('d/m/Y') ?></time>
-                        </div>
+                        </span>
                     <?php endif ?>
                 </small>
             </p>
         </header>
 
-        <article class="mt-5 mb-5"><?= $article->getContent() ?></article>
+        <div class="mt-5 mb-5"><?= $article->getContent() ?></div>
 
         <footer class="pt-3">
             <div id="commentaires">
@@ -80,15 +80,15 @@
                     <?php endif ?>
                     <div class="form-group mb-3">
                         <label for="comment_name">Nom ou pseudonyme</label>
-                        <input name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="" required>
+                        <input id="comment_name" name="comment_name"  type="text" class="form-control" placeholder="Nom ou pseudonyme" value="" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="comment_email">Adresse email</label>
-                        <input name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="" required>
+                        <input id="comment_email" name="comment_email"  type="text" class="form-control" placeholder="Adresse email" value="" required>
                     </div>
                     <div class="form-group mb-3">
                     <label for="comment_content">Commentaire <small>(1500 caractères maximum !)</small></label>
-                        <textarea name="comment_content" class="form-control" placeholder="Commentaire" rows="5" required></textarea>
+                        <textarea id="comment_content" name="comment_content" class="form-control" placeholder="Commentaire" rows="5" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Commenter</button>
                 </form>
@@ -96,7 +96,7 @@
         </footer>
 
 
-    </main>
+    </article>
 
     <?php include_once(__DIR__ . '/../Partials/footer.phtml'); ?>
 
