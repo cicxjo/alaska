@@ -21,31 +21,43 @@ class Article extends AbstractController
 
     public function listArticles(): void
     {
-        $render = new Render('Page', 'ListArticles');
-        $render->process([
-            'title' => 'Billet simple pour l’Alaska',
-            'url' => $this->config->getWebsiteUrl(),
-            'domain' => $this->config->getWebsiteDomain(),
-            'articles' => $this->articleManager->getAll(),
-        ]);
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $render = new Render('Page', 'ListArticles');
+            $render->process([
+                'title' => 'Billet simple pour l’Alaska',
+                'url' => $this->config->getWebsiteUrl(),
+                'domain' => $this->config->getWebsiteDomain(),
+                'articles' => $this->articleManager->getAll(),
+            ]);
+            return;
+        } else {
+            throw new HTTPException(405);
+            return;
+        }
     }
 
     public function showArticle(?array $parameters): void
     {
-        $id = $parameters['id'] ?? null;
+        $id = $parameters['id'];
 
         if ($this->isValidId($id)) {
             $article = $this->articleManager->getById((int) $id);
 
-            if ($article) {
-                $render = new Render('Page', 'ShowArticle');
-                $render->process([
-                    'article' => $article,
-                    'url' => $this->config->getWebsiteUrl(),
-                    'domain' => $this->config->getWebsiteDomain(),
-                ]);
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                if ($article) {
+                    $render = new Render('Page', 'ShowArticle');
+                    $render->process([
+                        'article' => $article,
+                        'url' => $this->config->getWebsiteUrl(),
+                        'domain' => $this->config->getWebsiteDomain(),
+                    ]);
+                    return;
+                } else {
+                    throw new HTTPException(404);
+                    return;
+                }
             } else {
-                throw new HTTPException(404);
+                throw new HTTPException(405);
                 return;
             }
         }
