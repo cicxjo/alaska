@@ -23,10 +23,10 @@ class Config
         $this->databaseUsername = $config['database']['username'];
         $this->databasePassword = $config['database']['password'];
         $this->databaseDebug = $config['database']['debug'];
-        $this->websiteUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
-        // $this->websiteUrl = $config['website']['url'];
-        $this->websiteDomain = $_SERVER['HTTP_HOST'];
-        // $this->websiteDomain = $config['website']['domain'];
+        // $this->websiteUrl = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://" . $_SERVER['HTTP_HOST'];
+        $this->websiteUrl = $config['website']['url'];
+        // $this->websiteDomain = $_SERVER['HTTP_HOST'];
+        $this->websiteDomain = $config['website']['domain'];
     }
 
     public static function getInstance(): self
