@@ -124,6 +124,25 @@ class Article extends AbstractManager
         return empty($articles) ? null : $articles;
     }
 
+    public function getAllWithoutComment(): ?array
+    {
+        $sql = <<<HEREDOC
+        SELECT * FROM {$this->articleTable} ORDER BY id ASC
+        HEREDOC;
+
+        try {
+            $query = $this->pdoHandler
+                          ->execute($sql);
+            $articles = $query->fetchAll(PDO::FETCH_CLASS, $this->articleEntity);
+        } catch (PDOException $e) {
+            if ($this->config->getDatabaseDebug()) {
+                PrintAndDie::vars($e->getMessage());
+            }
+        }
+
+        return empty($articles) ? null : $articles;
+    }
+
     public function getById(int $id): ?ArticleEntity
     {
         $sql = $this->buildSqlQueryGetWithComments();
