@@ -30,7 +30,7 @@ class Article extends AbstractManager
         $this->commentReflection = new ReflectionClass($this->commentEntity);
     }
 
-    private function get(): string
+    private function buildSqlQueryGetWithComments(): string
     {
         $sql = "SELECT\n";
         $articleProperties = $this->articleReflection->getProperties();
@@ -110,7 +110,7 @@ class Article extends AbstractManager
 
     public function getAll(): ?array
     {
-        $sql = $this->get();
+        $sql = $this->buildSqlQueryGetWithComments();
         $sql .= "\n" . 'ORDER BY ' . $this->articleTable . '.id ASC';
 
         try {
@@ -126,7 +126,7 @@ class Article extends AbstractManager
 
     public function getById(int $id): ?ArticleEntity
     {
-        $sql = $this->get();
+        $sql = $this->buildSqlQueryGetWithComments();
         $sql .= "\n" . 'WHERE ' . $this->articleTable . '.id = :id';
 
         try {
