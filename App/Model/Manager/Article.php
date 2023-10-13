@@ -30,7 +30,7 @@ class Article extends AbstractManager
         $this->commentReflection = new ReflectionClass($this->commentEntity);
     }
 
-    private function get(): string
+    private function buildSqlQueryGetWithComments(): string
     {
         $sql = "SELECT\n";
         $articleProperties = $this->articleReflection->getProperties();
@@ -110,7 +110,7 @@ class Article extends AbstractManager
 
     public function getAll(): ?array
     {
-        $sql = $this->get();
+        $sql = $this->buildSqlQueryGetWithComments();
         $sql .= "\n" . 'ORDER BY ' . $this->articleTable . '.id ASC';
 
         try {
@@ -124,9 +124,28 @@ class Article extends AbstractManager
         return empty($articles) ? null : $articles;
     }
 
+    public function getAllWithoutComment(): ?array
+    {
+        $sql = <<<HEREDOC
+        SELECT * FROM {$this->articleTable} ORDER BY id ASC
+        HEREDOC;
+
+        try {
+            $query = $this->pdoHandler
+                          ->execute($sql);
+            $articles = $query->fetchAll(PDO::FETCH_CLASS, $this->articleEntity);
+        } catch (PDOException $e) {
+            if ($this->config->getDatabaseDebug()) {
+                PrintAndDie::vars($e->getMessage());
+            }
+        }
+
+        return empty($articles) ? null : $articles;
+    }
+
     public function getById(int $id): ?ArticleEntity
     {
-        $sql = $this->get();
+        $sql = $this->buildSqlQueryGetWithComments();
         $sql .= "\n" . 'WHERE ' . $this->articleTable . '.id = :id';
 
         try {

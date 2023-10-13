@@ -27,7 +27,7 @@ class Article extends AbstractController
                 'title' => 'Billet simple pour l’Alaska',
                 'url' => $this->config->getWebsiteUrl(),
                 'domain' => $this->config->getWebsiteDomain(),
-                'articles' => $this->articleManager->getAll(),
+                'articles' => $this->articleManager->getAllWithoutComment(),
             ]);
             return;
         } else {
