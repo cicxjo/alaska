@@ -8,7 +8,7 @@ use App\Model\Render;
 
 class About extends AbstractController
 {
-    public function goToAbout()
+    public function goToAbout(): void
     {
         $render = new Render('Page', 'About');
         $render->process([
@@ -16,6 +16,5 @@ class About extends AbstractController
             'url' => $this->config->getWebsiteUrl(),
             'domain' => $this->config->getWebsiteDomain(),
         ]);
-        return;
     }
 }
