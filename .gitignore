@@ -3,3 +3,4 @@ devel.mk
 composer.lock
 vendor/
 App/config.ini
+*.zip
