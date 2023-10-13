@@ -34,7 +34,7 @@ class Comment extends AbstractController
 
     private function isValidContent(string $content): bool
     {
-        return strlen($content) <= 1500 ? true : false;
+        return strlen($content) <= 255 ? true : false;
     }
 
     public function addComment(?array $parameters): void
